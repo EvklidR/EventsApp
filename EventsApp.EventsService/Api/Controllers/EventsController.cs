@@ -13,17 +13,14 @@ public class EventsController : ControllerBase
     private readonly IEventService _eventService;
     private readonly string _imagePath;
     private readonly IDatabase _redisDb;
-    private readonly IUnitOfWork _unitOfWork;
 
     public EventsController(IEventService eventService,
                             IConfiguration configuration,
-                            IConnectionMultiplexer redis,
-                            IUnitOfWork unitOfWork)
+                            IConnectionMultiplexer redis)
     {
         _imagePath = Path.Combine(configuration["ImageSettings:ImagePath"]);
         _eventService = eventService;
         _redisDb = redis.GetDatabase();
-        _unitOfWork = unitOfWork;
     }
 
     [HttpGet("get-file/{fileName}")]

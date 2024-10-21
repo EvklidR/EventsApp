@@ -12,7 +12,6 @@ namespace ControllerUnitTests
     public class EventsControllerTests
     {
         private readonly Mock<IEventService> _mockEventService;
-        private readonly Mock<IUnitOfWork> _mockUnitOfWork;
         private readonly Mock<IConnectionMultiplexer> _mockRedis;
         private readonly Mock<IDatabase> _mockRedisDb;
         private readonly IConfiguration _mockConfig;
@@ -21,7 +20,6 @@ namespace ControllerUnitTests
         public EventsControllerTests()
         {
             _mockEventService = new Mock<IEventService>();
-            _mockUnitOfWork = new Mock<IUnitOfWork>();
             _mockRedis = new Mock<IConnectionMultiplexer>();
             _mockRedisDb = new Mock<IDatabase>();
             _mockRedis.Setup(x => x.GetDatabase(It.IsAny<int>(), It.IsAny<object>())).Returns(_mockRedisDb.Object);
@@ -33,7 +31,7 @@ namespace ControllerUnitTests
                 .AddInMemoryCollection(inMemorySettings)
                 .Build();
 
-            _controller = new EventsController(_mockEventService.Object, _mockConfig, _mockRedis.Object, _mockUnitOfWork.Object);
+            _controller = new EventsController(_mockEventService.Object, _mockConfig, _mockRedis.Object);
         }
 
 

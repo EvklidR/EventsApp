@@ -81,28 +81,31 @@ namespace EventsApp.EventsService.Application.ApplicationServices
             }
 
             var existingEvent = _unitOfWork.Events.GetAll().FirstOrDefault(e => e.Id == updateEventDto.Id);
-            if (existingEvent == null) throw new Exception("Event not found");
+
+            if (existingEvent == null)
+                throw new Exception("Event not found");
 
             var oldDateTime = existingEvent.DateTimeHolding;
             var oldLocation = existingEvent.Location;
 
             _mapper.Map(updateEventDto, existingEvent);
-
             await _unitOfWork.CompleteAsync();
+
             if (oldDateTime != existingEvent.DateTimeHolding || oldLocation != existingEvent.Location)
             {
-
                 var participants = await _participants.GetParticipantsByEventIdAsync(existingEvent.Id);
                 foreach (var participant in participants)
                 {
                     string body = $"Уважаемый {participant.Name}! Данные о мероприятии {existingEvent.Name}," +
-                        $" в котором вы участвуете, изменились. " +
-                        $"Сообщаем, что теперь место проведения: {existingEvent.Location}," +
-                        $" время проведения: {existingEvent.DateTimeHolding}";
+                                  $" в котором вы участвуете, изменились. " +
+                                  $"Сообщаем, что теперь место проведения: {existingEvent.Location}," +
+                                  $" время проведения: {existingEvent.DateTimeHolding}";
                     _emailSender.SendEmail(participant.Email, "Event Updated", body);
                 }
             }
         }
+
+
 
         public async Task DeleteEventAsync(int id)
         {
