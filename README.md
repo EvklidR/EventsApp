@@ -1,22 +1,57 @@
 # Event Management System
 
-## Описание проекта
+## Project Description
 
-Этот проект представляет собой систему управления мероприятиями, которая состоит из нескольких микросервисов и клиентского приложения на Angular. Система позволяет пользователям регистрироваться на мероприятия, управлять своими событиями и получать информацию о предстоящих событиях.
+This project is an event management system consisting of several microservices and a client application built with Angular. The system allows users to register for events, manage their activities, and obtain information about upcoming events.
 
-**Основные компоненты:**
-- **Микросервис авторизации**: Обрабатывает аутентификацию пользователей.
-- **Микросервис работы с событиями**: Управляет созданием, обновлением и удалением мероприятий.
-- **Клиентское приложение на Angular**: Интерфейс для пользователей, позволяющий взаимодействовать с системой.
+**Main Components:**
+- **Authorization Microservice**: Handles user authentication.
+- **Event Management Microservice**: Manages the creation, updating, and deletion of events.
+- **Client Application in Angular**: User interface that allows interaction with the system.
 
-## Технологии
+## Technologies
 
 - **Backend**: C#, ASP.NET, Entity Framework, MSSQL
 - **Frontend**: Angular
-- **Аутентификация**: JWT (JSON Web and refresh Tokens)
-- **Чистая архитектура**: Используется для обеспечения разделения логики и облегчения тестирования и масштабируемости.
+- **Authentication**: JWT (JSON Web Tokens and refresh tokens)
+- **Clean Architecture**: Used to ensure separation of concerns and facilitate testing and scalability.
 
-## Контакты
+## Installation Guide
+To set up and run the backend for the Event Management System, follow the instructions below.
 
-Если у вас есть вопросы или предложения, не стесняйтесь обращаться ко мне:
+**bash**
+git clone https://github.com/EvklidR/EventsApp.git
+
+**Restore Dependencies**
+Navigate to the backend project folder and restore the required NuGet packages:
+
+**bash**
+dotnet restore
+
+**Configure the Environment**
+Update the appsettings.json files with the correct settings for your local environment. Ensure that the MSSQL connection string is configured properly to connect to your database.
+
+**Apply Database Migrations**
+Run the database migrations to set up the schema for the application:
+
+**bash**
+dotnet ef database update
+
+**Build the Project**
+Build the project to compile the application:
+
+**bash**
+dotnet build
+
+**Run the Application**
+Once the project is built, run the application locally:
+
+**bash**
+dotnet run
+
+The backend will be available at http://localhost:5000 (or another port, depending on your configuration).
+
+## Contacts
+
+If you have any questions or suggestions, feel free to reach out to me:
 **Email**: gbvu2004@gmail.com
