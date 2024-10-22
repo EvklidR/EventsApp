@@ -22,6 +22,19 @@ namespace EventsApp.AuthorisationService
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins:CorsOrigins").Get<string[]>();
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificOrigin",
+                    builder =>
+                    {
+                        builder.WithOrigins(allowedOrigins)
+                               .AllowAnyMethod()
+                               .AllowAnyHeader();
+                    });
+            });
+
             builder.Services.AddControllers();
 
             builder.AddServiceDefaults();
@@ -88,9 +101,9 @@ namespace EventsApp.AuthorisationService
 
             var app = builder.Build();
 
+            app.UseCors("AllowSpecificOrigin");
+
             app.UseMiddleware<ExceptionHandlingMiddleware>();
-
-
 
             if (app.Environment.IsDevelopment())
             {

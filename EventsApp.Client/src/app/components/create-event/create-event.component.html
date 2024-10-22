@@ -1,0 +1,61 @@
+<form [formGroup]="eventForm" (ngSubmit)="onSubmit()">
+  <div>
+    <label for="name">Название события:</label>
+    <input id="name" formControlName="name" required />
+    <div *ngIf="eventForm.get('name')?.invalid && eventForm.get('name')?.touched" class="error-message">
+      Название обязательно
+    </div>
+  </div>
+
+  <div>
+    <label for="description">Описание события:</label>
+    <textarea id="description" formControlName="description" required></textarea>
+    <div *ngIf="eventForm.get('description')?.invalid && eventForm.get('description')?.touched" class="error-message">
+      Описание обязательно
+    </div>
+  </div>
+
+  <div>
+    <label for="dateTimeHolding">Дата проведения:</label>
+    <input id="dateTimeHolding" type="datetime-local" formControlName="dateTimeHolding" required />
+    <div *ngIf="eventForm.get('dateTimeHolding')?.invalid && eventForm.get('dateTimeHolding')?.touched" class="error-message">
+      Дата и время обязательны
+    </div>
+  </div>
+
+  <div>
+    <label for="location">Место проведения:</label>
+    <input id="location" formControlName="location" required />
+    <div *ngIf="eventForm.get('location')?.invalid && eventForm.get('location')?.touched" class="error-message">
+      Место проведения обязательно
+    </div>
+  </div>
+
+  <div>
+    <label for="category">Категория события:</label>
+    <select id="category" formControlName="category" required>
+      <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+    </select>
+    <div *ngIf="eventForm.get('category')?.invalid && eventForm.get('category')?.touched" class="error-message">
+      Категория обязательна
+    </div>
+  </div>
+
+  <div>
+    <label for="maxParticipants">Максимальное количество участников:</label>
+    <input id="maxParticipants" type="number" formControlName="maxParticipants" required />
+    <div *ngIf="eventForm.get('maxParticipants')?.invalid && eventForm.get('maxParticipants')?.touched" class="error-message">
+      Укажите количество участников
+    </div>
+  </div>
+
+  <div>
+    <label for="imageFile">Изображение события:</label>
+    <input id="imageFile" type="file" (change)="onFileSelected($event)" required />
+    <div *ngIf="eventForm.get('imageFile')?.invalid && eventForm.get('imageFile')?.touched" class="error-message">
+      Изображение обязательно
+    </div>
+  </div>
+
+  <button type="submit" [disabled]="eventForm.invalid">Создать событие</button>
+</form>

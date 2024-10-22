@@ -1,0 +1,41 @@
+.event-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.event-item {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: box-shadow 0.3s;
+}
+
+  .event-item:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .event-item a {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+  }
+
+  .event-item button {
+    padding: 8px 12px;
+    font-size: 14px;
+    color: white;
+    background-color: #28a745;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+    .event-item button:hover {
+      background-color: #218838;
+    }

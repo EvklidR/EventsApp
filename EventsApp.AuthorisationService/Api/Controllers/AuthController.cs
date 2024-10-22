@@ -51,7 +51,7 @@ namespace EventsApp.AuthorisationService.Api.Controllers
 
             return Ok(new AuthenticatedResponse
             {
-                Token = accessToken,
+                AccessToken = accessToken,
                 RefreshToken = refreshToken
             });
         }
@@ -83,7 +83,7 @@ namespace EventsApp.AuthorisationService.Api.Controllers
                 await _userService.UpdateUserAsync(newUser);
                 return Ok(new AuthenticatedResponse
                 {
-                    Token = accessToken,
+                    AccessToken = accessToken,
                     RefreshToken = refreshToken
                 });
             }
@@ -92,5 +92,6 @@ namespace EventsApp.AuthorisationService.Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
     }
 }

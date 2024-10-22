@@ -1,0 +1,57 @@
+<h2>Все события</h2>
+
+<form [formGroup]="filterForm" (ngSubmit)="applyFilters()" class="filter-form">
+  <div class="form-group">
+    <label for="date">Дата:</label>
+    <input id="date" type="date" formControlName="Date" class="form-control">
+  </div>
+
+  <div class="form-group">
+    <label for="location">Место:</label>
+    <input id="location" formControlName="Location" class="form-control">
+  </div>
+
+  <div class="form-group">
+    <label for="category">Категория:</label>
+    <select id="category" formControlName="Category" class="form-control">
+      <option value="">Все категории</option>
+      <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="pageSize">Размер страницы:</label>
+    <select id="pageSize" formControlName="PageSize" class="form-control">
+      <option value="5">5</option>
+      <option value="10">10</option>
+      <option value="20">20</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="pageNumber">Номер страницы:</label>
+    <input id="pageNumber" type="number" formControlName="PageNumber" min="1" class="form-control">
+  </div>
+
+  <button type="submit" class="btn btn-primary">Применить фильтры</button>
+</form>
+
+<ul class="event-list">
+  <li *ngFor="let event of events" class="event-item">
+    <a [routerLink]="['/event/', event.id]">{{ event.name }} - {{ event.dateTimeHolding | date:'short' }}</a>
+    <span *ngIf="event.participants.length >= event.maxParticipants" class="full">
+      Мест нет
+    </span>
+    <button *ngIf="isAdmin" (click)="deleteEvent(event.id)">Удалить</button>
+  </li>
+</ul>
+
+<div class="pagination-controls">
+  <button (click)="filterForm.get('PageNumber')?.setValue(filterForm.get('PageNumber')?.value - 1)"
+          [disabled]="filterForm.get('PageNumber')?.value <= 1" class="btn btn-secondary">
+    Предыдущая
+  </button>
+  <button (click)="filterForm.get('PageNumber')?.setValue(filterForm.get('PageNumber')?.value + 1)" class="btn btn-secondary">
+    Следующая
+  </button>
+</div>

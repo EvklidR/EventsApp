@@ -1,0 +1,16 @@
+<header>
+  <nav>
+    <ul>
+      <li *ngIf="!isAuthorized"><a routerLink="/login">Войти</a></li>
+      <li *ngIf="!isAuthorized"><a routerLink="/register">Зарегистрироваться</a></li>
+      <li *ngIf="isAuthorized"><a (click)="logout()">Выйти</a></li>
+      <li *ngIf="isAuthorized"><a routerLink="/my-events">Мои события</a></li>
+      <li><a routerLink="/events">События</a></li>
+      <li *ngIf="isAdmin"><a routerLink="/create-event">Создать событие</a></li>
+    </ul>
+  </nav>
+</header>
+
+<div>
+  <router-outlet></router-outlet>
+</div>

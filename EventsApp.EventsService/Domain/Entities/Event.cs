@@ -11,7 +11,7 @@ namespace EventsApp.EventsService.Domain.Entities
         public string Location { get; set; }
         public CategoryOfEvent Category { get; set; }
         public int MaxParticipants { get; set; }
-        public string ImageUrl { get; set; }
+        public string? ImageUrl { get; set; }
         public List<ParticipantOfEvent> Participants { get; set; } = new List<ParticipantOfEvent>();
 
     }

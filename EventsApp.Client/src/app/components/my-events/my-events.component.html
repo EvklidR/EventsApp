@@ -1,0 +1,12 @@
+<h2>Мои события</h2>
+
+<ul class="event-list">
+  <li *ngFor="let event of myEvents" class="event-item">
+    <a [routerLink]="['/event/', event.id]">{{ event.name }} - {{ event.dateTimeHolding | date:'short' }}</a>
+    <button (click)="unregisterFromEvent(event.id)">Отменить регистрацию</button>
+  </li>
+</ul>
+
+<div *ngIf="myEvents.length === 0">
+  <p>У вас нет записанных событий.</p>
+</div>

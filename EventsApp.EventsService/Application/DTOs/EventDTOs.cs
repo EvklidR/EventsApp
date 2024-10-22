@@ -32,7 +32,7 @@ namespace EventsApp.EventsService.Application.DTOs
         public string Location { get; set; }
         public CategoryOfEvent Category { get; set; }
         public int MaxParticipants { get; set; }
-        public string ImageUrl { get; set; }
+        public string? ImageUrl { get; set; }
         public IEnumerable<ParticipantOfEventDto> Participants { get; set; }
 
     }

@@ -1,0 +1,38 @@
+<div *ngIf="event" class="event-details-container">
+  <div class="event-image">
+    <img [src]="imageUrl" alt="Изображение события" />
+  </div>
+  <div class="event-info">
+    <h2>{{ event.name }}</h2>
+    <p><strong>Дата проведения:</strong> {{ event.dateTimeHolding | date:'fullDate' }}</p>
+    <p><strong>Описание:</strong> {{ event.description }}</p>
+    <p><strong>Место проведения:</strong> {{ event.location }}</p>
+    <p><strong>Тип события:</strong> {{ eventCategory }}</p>
+    <p><strong>Максимальное количество участников:</strong> {{ event.maxParticipants }}</p>
+    <p><strong>Зарегистрированные участники:</strong> {{ event.participants.length }}</p>
+
+    <p *ngIf="event.participants.length >= event.maxParticipants" class="full">Мест нет</p>
+
+    <button *ngIf="isAuthorized && event.participants.length < event.maxParticipants" (click)="openModal()">Зарегистрироваться</button>
+
+    <app-registration-modal [isModalOpen]="isModalOpen"
+                            [isAuthorized]="isAuthorized"
+                            [eventId]="event.id"
+                            (close)="closeModal()">
+    </app-registration-modal>
+
+    <div *ngIf="isAdmin()">
+      <button class="admin-button" (click)="openEditModal()">Редактировать событие</button>
+      <button class="admin-button" (click)="deleteEvent(event.id)">Удалить</button>
+    </div>
+  </div>
+</div>
+
+<app-edit-event-modal [isModalOpen]="isEditModalOpen"
+                      [event]="event"
+                      (close)="updateEvent($event)">
+</app-edit-event-modal>
+
+<div *ngIf="!event" class="container">
+  <p>Информация о событии недоступна.</p>
+</div>

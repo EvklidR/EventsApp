@@ -1,0 +1,39 @@
+<div class="modal" *ngIf="isModalOpen">
+  <div class="modal-content">
+    <span class="close-button" (click)="closeModal()">&times;</span>
+    <h2>Редактировать событие</h2>
+    <form [formGroup]="editEventForm" (ngSubmit)="submit()">
+      <div>
+        <label for="name">Название</label>
+        <input id="name" formControlName="name" />
+      </div>
+      <div>
+        <label for="description">Описание</label>
+        <textarea id="description" formControlName="description"></textarea>
+      </div>
+      <div>
+        <label for="dateTimeHolding">Дата и время проведения</label>
+        <input id="dateTimeHolding" type="datetime-local" formControlName="dateTimeHolding" />
+      </div>
+      <div>
+        <label for="location">Место проведения</label>
+        <input id="location" formControlName="location" />
+      </div>
+      <div>
+        <label for="category">Категория</label>
+        <select id="category" formControlName="category">
+          <option [ngValue]=CategoryOfEvent.Educational [selected]="event?.category === CategoryOfEvent.Educational">{{ CategoryOfEvent[0] }}</option>
+          <option [ngValue]=CategoryOfEvent.Entertainment [selected]="event?.category === CategoryOfEvent.Entertainment">{{ CategoryOfEvent[1] }}</option>
+          <option [ngValue]=CategoryOfEvent.Sports [selected]="event?.category === CategoryOfEvent.Sports">{{ CategoryOfEvent[2] }}</option>
+          <option [ngValue]=CategoryOfEvent.Social [selected]="event?.category === CategoryOfEvent.Social">{{ CategoryOfEvent[3] }}</option>
+          <option [ngValue]=CategoryOfEvent.Thematic [selected]="event?.category === CategoryOfEvent.Thematic">{{ CategoryOfEvent[4] }}</option>
+        </select>
+      </div>
+      <div>
+        <label for="maxParticipants">Максимальное количество участников</label>
+        <input id="maxParticipants" type="number" formControlName="maxParticipants" />
+      </div>
+      <button type="submit" [disabled]="editEventForm.invalid">Сохранить изменения</button>
+    </form>
+  </div>
+</div>

@@ -38,11 +38,11 @@ namespace EventsApp.AuthorisationService.Infrastructure.Repositories
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Login == login);
             if (!BCrypt.Net.BCrypt.Verify(password, user.HashedPassword))
             {
-                throw new ArgumentException("Invalid credentials");
+                return null;
             }
             if (user == null)
             {
-                throw new ArgumentException("Invalid credentials");
+                return null;
             }
 
             return user;

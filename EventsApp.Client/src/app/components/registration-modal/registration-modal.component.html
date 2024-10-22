@@ -1,0 +1,22 @@
+<div *ngIf="isModalOpen" class="modal">
+  <div class="modal-content">
+    <span class="close-button" (click)="closeModal()">&times;</span>
+
+    <form [formGroup]="registrationForm" (ngSubmit)="registerForEvent()">
+      <label for="name">Имя</label>
+      <input id="name" formControlName="name" type="text" />
+
+      <label for="surname">Фамилия</label>
+      <input id="surname" formControlName="surname" type="text" />
+
+      <label for="dateOfBirthday">Дата рождения</label>
+      <input id="dateOfBirthday" formControlName="dateOfBirthday" type="date" />
+
+      <label for="email">Email</label>
+      <input id="email" formControlName="email" type="email" />
+
+      <button type="submit" [disabled]="registrationForm.invalid">Зарегистрироваться</button>
+      <button type="button" (click)="closeModal()">Закрыть</button>
+    </form>
+  </div>
+</div>

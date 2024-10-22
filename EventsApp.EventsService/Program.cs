@@ -24,6 +24,19 @@ namespace EventsApp.EventsService
             var builder = WebApplication.CreateBuilder(args);
             builder.AddServiceDefaults();
 
+            var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins:CorsOrigins").Get<string[]>();
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificOrigin",
+                    builder =>
+                    {
+                        builder.WithOrigins(allowedOrigins)
+                               .AllowAnyMethod()
+                               .AllowAnyHeader();
+                    });
+            });
+
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
@@ -110,6 +123,9 @@ namespace EventsApp.EventsService
             });
 
             var app = builder.Build();
+
+            app.UseCors("AllowSpecificOrigin");
+
 
             app.UseMiddleware<ExceptionHandlingMiddleware>();
 

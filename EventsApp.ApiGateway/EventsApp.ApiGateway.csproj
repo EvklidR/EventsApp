@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EventApp.Client\EventApp.Client.esproj" />
     <ProjectReference Include="..\EventsApp.ServiceDefaults\EventsApp.ServiceDefaults.csproj" />
   </ItemGroup>
 

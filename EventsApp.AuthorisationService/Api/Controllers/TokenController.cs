@@ -44,7 +44,7 @@ namespace EventsApp.AuthorisationService.Api.Controllers
 
             return Ok(new AuthenticatedResponse()
             {
-                Token = newAccessToken,
+                AccessToken = newAccessToken,
                 RefreshToken = newRefreshToken
             });
         }

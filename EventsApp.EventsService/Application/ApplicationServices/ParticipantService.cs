@@ -5,6 +5,7 @@ using EventsApp.EventsService.Application.Interfaces;
 using EventsApp.EventsService.Domain.Entities;
 using EventsApp.EventsService.Domain.Interfaces;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 
 namespace EventsApp.EventsService.Application.ApplicationServices
 {
@@ -23,13 +24,27 @@ namespace EventsApp.EventsService.Application.ApplicationServices
 
         public async Task RegisterUserForEventAsync(CreateProfileDto profileDto)
         {
+            // Валидация входящих данных
             var validationResult = await _createProfileValidator.ValidateAsync(profileDto);
             if (!validationResult.IsValid)
             {
                 throw new ValidationException(validationResult.Errors);
             }
 
-            var eventToRegister = _unitOfWork.Events.GetAll().FirstOrDefault(e => e.Id == profileDto.EventId);
+            // Получаем событие для регистрации
+            var eventToRegister = await _unitOfWork.Events.GetAll()
+                .FirstOrDefaultAsync(e => e.Id == profileDto.EventId);
+
+            // Проверяем, зарегистрирован ли пользователь на это событие
+            var isAlreadyRegistered = await _unitOfWork.Participants
+                .GetByEventIdAsync(profileDto.EventId); // Получаем участников события
+
+            if (isAlreadyRegistered.Any(p => p.UserId == profileDto.UserId)) // Проверка по UserId
+            {
+                throw new InvalidOperationException("Вы уже зарегистрированы на это событие.");
+            }
+
+            // Проверяем, есть ли места для регистрации
             if (eventToRegister != null && eventToRegister.Participants.Count < eventToRegister.MaxParticipants)
             {
                 var participant = _mapper.Map<ParticipantOfEvent>(profileDto);
@@ -42,6 +57,7 @@ namespace EventsApp.EventsService.Application.ApplicationServices
                 throw new InvalidOperationException("Нет мест для регистрации на это событие.");
             }
         }
+
 
         public async Task UnregisterUserFromEventAsync(int eventId, int userId)
         {
