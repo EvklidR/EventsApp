@@ -1,10 +1,8 @@
-﻿using Xunit;
-using Moq;
+﻿using Moq;
 using Microsoft.AspNetCore.Mvc;
 using EventsApp.EventsService.Application.Interfaces;
 using EventsApp.EventsService.Application.DTOs;
 using StackExchange.Redis;
-using EventsApp.EventsService.Domain.Interfaces;
 using Microsoft.Extensions.Configuration;
 
 namespace ControllerUnitTests
