@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using EventsApp.EventsService.Application.DTOs;
-using EventsApp.EventsService.Application.Interfaces;
-using EventsApp.EventsService.Domain.Entities;
-using EventsApp.EventsService.Domain.Interfaces;
+using EventsService.Application.DTOs;
+using EventsService.Application.Interfaces;
+using EventsService.Domain.Entities;
+using EventsService.Domain.Interfaces;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
-namespace EventsApp.EventsService.Application.ApplicationServices
+namespace EventsService.Application.ApplicationServices
 {
     public class ParticipantService : IParticipantService
     {

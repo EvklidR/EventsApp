@@ -1,4 +1,4 @@
-﻿namespace EventsApp.EventsService.Application.Interfaces
+﻿namespace EventsService.Application.Interfaces
 {
     public interface IEmailSender
     {

@@ -1,6 +1,6 @@
-﻿using EventsApp.EventsService.Domain.Enums;
+﻿using EventsService.Domain.Enums;
 
-namespace EventsApp.EventsService.Domain.Entities
+namespace EventsService.Domain.Entities
 {
     public class Event
     {

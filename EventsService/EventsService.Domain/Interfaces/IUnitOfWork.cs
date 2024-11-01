@@ -1,4 +1,4 @@
-﻿namespace EventsApp.EventsService.Domain.Interfaces
+﻿namespace EventsService.Domain.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {

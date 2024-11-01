@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using Newtonsoft.Json;
 
-namespace EventsApp.EventsService
+namespace AuthorisationService.Api
 {
 
     public class ExceptionHandlingMiddleware

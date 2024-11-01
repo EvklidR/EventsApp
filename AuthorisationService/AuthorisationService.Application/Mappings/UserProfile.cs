@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
-using EventsApp.AuthorisationService.Application.DTOs;
-using EventsApp.AuthorisationService.Domain.Entities;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using AuthorisationService.Application.DTOs;
+using AuthorisationService.Domain.Entities;
 
 
-namespace EventsApp.AuthorisationService.Application.Mappings
+namespace AuthorisationService.Application.Mappings
 {
     public class UserProfileMapper : Profile
     {

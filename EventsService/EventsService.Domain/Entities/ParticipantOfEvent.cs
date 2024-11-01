@@ -1,4 +1,4 @@
-﻿namespace EventsApp.EventsService.Domain.Entities
+﻿namespace EventsService.Domain.Entities
 {
     public class ParticipantOfEvent
     {

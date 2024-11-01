@@ -1,13 +1,13 @@
-﻿using EventsApp.EventsService.Domain.Entities;
-using EventsApp.EventsService.Domain.Interfaces;
-using EventsApp.EventsService.Application.Interfaces;
-using EventsApp.EventsService.Application.DTOs;
+﻿using EventsService.Domain.Entities;
+using EventsService.Domain.Interfaces;
+using EventsService.Application.Interfaces;
+using EventsService.Application.DTOs;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 
-namespace EventsApp.EventsService.Application.ApplicationServices
+namespace EventsService.Application.ApplicationServices
 {
     public class EventService : IEventService
     {

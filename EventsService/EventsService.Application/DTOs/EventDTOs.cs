@@ -1,6 +1,6 @@
-﻿using EventsApp.EventsService.Domain.Enums;
+﻿using EventsService.Domain.Enums;
 
-namespace EventsApp.EventsService.Application.DTOs
+namespace EventsService.Application.DTOs
 {
     public class CreateEventDto
     {

@@ -1,4 +1,4 @@
-﻿namespace EventsApp.EventsService.Domain.Enums;
+﻿namespace EventsService.Domain.Enums;
 
 public enum CategoryOfEvent
 {

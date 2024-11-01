@@ -1,8 +1,8 @@
-﻿using EventsApp.AuthorisationService.Domain.Entities;
+﻿using AuthorisationService.Domain.Entities;
 using System.Linq.Expressions;
 
 
-namespace EventsApp.AuthorisationService.Domain.Interfaces
+namespace AuthorisationService.Domain.Interfaces
 {
     public interface IUserRepository
     {

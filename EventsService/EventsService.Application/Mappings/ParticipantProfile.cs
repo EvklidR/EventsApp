@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
-using EventsApp.EventsService.Application.DTOs;
-using EventsApp.EventsService.Domain.Entities;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using EventsService.Application.DTOs;
+using EventsService.Domain.Entities;
 
-namespace EventsApp.EventsService.Application.Mappings
+namespace EventsService.Application.Mappings
 {
     public class ParticipantProfile : Profile
     {

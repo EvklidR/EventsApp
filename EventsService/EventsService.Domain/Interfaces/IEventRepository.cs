@@ -1,7 +1,7 @@
-﻿using EventsApp.EventsService.Domain.Entities;
+﻿using EventsService.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 
-namespace EventsApp.EventsService.Domain.Interfaces
+namespace EventsService.Domain.Interfaces
 {
     public interface IEventRepository
     {

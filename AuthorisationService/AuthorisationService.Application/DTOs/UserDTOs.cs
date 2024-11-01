@@ -1,8 +1,6 @@
-﻿
-using EventsApp.AuthorisationService.Domain.Enums;
-using System.Data;
+﻿using AuthorisationService.Domain.Enums;
 
-namespace EventsApp.AuthorisationService.Application.DTOs
+namespace AuthorisationService.Application.DTOs
 {
     public class CreateUserDto
     {

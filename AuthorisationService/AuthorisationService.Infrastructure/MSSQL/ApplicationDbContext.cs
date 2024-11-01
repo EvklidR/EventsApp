@@ -1,8 +1,7 @@
-﻿using EventsApp.AuthorisationService.Domain.Enums;
-using Microsoft.EntityFrameworkCore;
-using EventsApp.AuthorisationService.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using AuthorisationService.Domain.Entities;
 
-namespace EventsApp.AuthorisationService.Infrastructure.MSSQL
+namespace AuthorisationService.Infrastructure.MSSQL
 {
     public class ApplicationDbContext : DbContext
     {

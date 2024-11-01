@@ -2,12 +2,12 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using EventsApp.AuthorisationService.Domain.Interfaces;
+using AuthorisationService.Domain.Interfaces;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 
 
-namespace EventsApp.AuthorisationService.Application.ApplicationServices
+namespace AuthorisationService.Infrastructure.Services
 {
     public class TokenService : ITokenService
     {

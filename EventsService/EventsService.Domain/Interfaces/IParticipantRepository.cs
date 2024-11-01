@@ -1,8 +1,6 @@
-﻿using EventsApp.EventsService.Domain.Entities;
-using System.Linq;
-using System.Linq.Expressions;
+﻿using EventsService.Domain.Entities;
 
-namespace EventsApp.EventsService.Domain.Interfaces
+namespace EventsService.Domain.Interfaces
 {
     public interface IParticipantRepository
     {

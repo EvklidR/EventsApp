@@ -1,4 +1,4 @@
-﻿namespace EventsApp.AuthorisationService.Domain.Enums;
+﻿namespace AuthorisationService.Domain.Enums;
 
 public enum Role
 {

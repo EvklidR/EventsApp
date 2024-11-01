@@ -1,7 +1,6 @@
-﻿using EventsApp.EventsService.Application.DTOs;
-using EventsApp.EventsService.Domain.Entities;
+﻿using EventsService.Application.DTOs;
 
-namespace EventsApp.EventsService.Application.Interfaces
+namespace EventsService.Application.Interfaces
 {
     public interface IParticipantService
     {

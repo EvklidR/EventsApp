@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using EventsApp.AuthorisationService.Application.DTOs;
+using AuthorisationService.Application.DTOs;
 
-namespace EventsApp.AuthorisationService.Application.Validators
+namespace AuthorisationService.Application.Validators
 {
     public class CreateUserDtoValidator : AbstractValidator<CreateUserDto>
     {

@@ -1,8 +1,8 @@
 ﻿
-using EventsApp.AuthorisationService.Domain.Enums;
+using AuthorisationService.Domain.Enums;
 using System.Data;
 
-namespace EventsApp.AuthorisationService.Domain.Entities
+namespace AuthorisationService.Domain.Entities
 {
     public class User
     {

@@ -1,9 +1,9 @@
-﻿using EventsApp.AuthorisationService.Domain.Interfaces;
-using EventsApp.AuthorisationService.Infrastructure.Models;
+﻿using AuthorisationService.Domain.Interfaces;
+using AuthorisationService.Infrastructure.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EventsApp.AuthorisationService.Api.Controllers
+namespace AuthorisationService.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -37,15 +37,11 @@ namespace EventsApp.AuthorisationService.Api.Controllers
                 return BadRequest("Invalid client request");
 
             var newAccessToken = _tokenService.GenerateAccessToken(principal.Claims);
-            var newRefreshToken = _tokenService.GenerateRefreshToken();
-
-            user.RefreshToken = newRefreshToken;
-            await _userRepository.CompleteAsync();
 
             return Ok(new AuthenticatedResponse()
             {
                 AccessToken = newAccessToken,
-                RefreshToken = newRefreshToken
+                RefreshToken = user.RefreshToken
             });
         }
 

@@ -1,11 +1,11 @@
-﻿using EventsApp.AuthorisationService.Domain.Entities;
-using EventsApp.AuthorisationService.Domain.Interfaces;
-using EventsApp.AuthorisationService.Infrastructure.MSSQL;
+﻿using AuthorisationService.Domain.Entities;
+using AuthorisationService.Domain.Interfaces;
+using AuthorisationService.Infrastructure.MSSQL;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace EventsApp.AuthorisationService.Infrastructure.Repositories
+namespace AuthorisationService.Infrastructure.Repositories
 {
     public class UserRepository : IUserRepository
     {

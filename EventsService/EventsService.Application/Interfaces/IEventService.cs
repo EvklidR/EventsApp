@@ -1,7 +1,7 @@
-﻿using EventsApp.EventsService.Application.DTOs;
+﻿using EventsService.Application.DTOs;
 using Microsoft.AspNetCore.Http;
 
-namespace EventsApp.EventsService.Application.Interfaces
+namespace EventsService.Application.Interfaces
 {
     public interface IEventService
     {

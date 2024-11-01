@@ -1,4 +1,4 @@
-﻿namespace EventsApp.AuthorisationService.Infrastructure.Models
+﻿namespace AuthorisationService.Infrastructure.Models
 {
     public class AuthenticatedResponse
     {

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using EventsApp.EventsService.Application.DTOs;
-using EventsApp.EventsService.Domain.Entities;
+using EventsService.Application.DTOs;
+using EventsService.Domain.Entities;
 
 public class EventProfile : Profile
 {

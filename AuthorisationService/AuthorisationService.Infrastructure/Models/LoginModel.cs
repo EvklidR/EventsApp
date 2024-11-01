@@ -1,6 +1,4 @@
-﻿using EventsApp.AuthorisationService.Domain.Enums;
-
-namespace EventsApp.AuthorisationService.Infrastructure.Models
+﻿namespace AuthorisationService.Infrastructure.Models
 {
     public class LoginModel
     {

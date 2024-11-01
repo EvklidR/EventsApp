@@ -31,7 +31,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\EventsApp.ServiceDefaults\EventsApp.ServiceDefaults.csproj" />
     <ProjectReference Include="..\AuthorisationService.Application\AuthorisationService.Application.csproj" />
-    <ProjectReference Include="..\AuthorisationService.Infrustructure\AuthorisationService.Infrustructure.csproj" />
+    <ProjectReference Include="..\AuthorisationService.Infrastructure\AuthorisationService.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

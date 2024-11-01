@@ -1,7 +1,7 @@
-﻿using EventsApp.EventsService.Application.DTOs;
+﻿using EventsService.Application.DTOs;
 using FluentValidation;
 
-namespace EventsApp.EventsService.Application.Validators
+namespace EventsService.Application.Validators
 {
     public class ParticipantOfEventDtoValidator : AbstractValidator<ParticipantOfEventDto>
     {

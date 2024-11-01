@@ -1,18 +1,14 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using EventsApp.AuthorisationService.Infrastructure.MSSQL;
-using EventsApp.AuthorisationService.Application.Interfaces;
-using EventsApp.AuthorisationService.Application.Services;
-using EventsApp.AuthorisationService.Application.Mappings;
-using EventsApp.AuthorisationService.Domain.Interfaces;
-using EventsApp.AuthorisationService.Infrastructure.Repositories;
-using EventsApp.AuthorisationService.Application.ApplicationServices;
+using AuthorisationService.Infrastructure.MSSQL;
+using AuthorisationService.Domain.Interfaces;
+using AuthorisationService.Infrastructure.Repositories;
+using AuthorisationService.Infrastructure.Services;
 using Microsoft.OpenApi.Models;
-using FluentValidation;
-using EventsApp.AuthorisationService.Application.Validators;
-using EventsApp.EventsService;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using AuthorisationService.Application.DependencyInjection;
+using AuthorisationService.Api;
 
 namespace EventsApp.AuthorisationService
 {
@@ -21,32 +17,26 @@ namespace EventsApp.AuthorisationService
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
             var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins:CorsOrigins").Get<string[]>();
 
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("AllowSpecificOrigin",
-                    builder =>
-                    {
-                        builder.WithOrigins(allowedOrigins)
-                               .AllowAnyMethod()
-                               .AllowAnyHeader();
-                    });
+                options.AddPolicy("AllowSpecificOrigin", builder =>
+                {
+                    builder.WithOrigins(allowedOrigins)
+                           .AllowAnyMethod()
+                           .AllowAnyHeader();
+                });
             });
 
             builder.Services.AddControllers();
-
             builder.AddServiceDefaults();
             builder.Services.AddEndpointsApiExplorer();
-
-            builder.Services.AddValidatorsFromAssemblyContaining<CreateUserDtoValidator>();
-
+            builder.Services.AddApplicationServices();
 
             builder.Services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Authorization Service", Version = "v1" });
-
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     In = ParameterLocation.Header,
@@ -54,7 +44,6 @@ namespace EventsApp.AuthorisationService
                     Name = "Authorization",
                     Type = SecuritySchemeType.ApiKey
                 });
-
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
                     {
@@ -75,9 +64,7 @@ namespace EventsApp.AuthorisationService
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddTransient<ITokenService, TokenService>();
-            builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
-            builder.Services.AddAutoMapper(typeof(UserProfileMapper).Assembly);
 
             builder.Services.AddAuthorization();
             builder.Services.AddAuthentication(options =>
@@ -96,15 +83,13 @@ namespace EventsApp.AuthorisationService
                     ValidIssuer = builder.Configuration["AuthOptions:Issuer"],
                     ValidAudience = builder.Configuration["AuthOptions:Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(builder.Configuration["AuthOptions:Key"]
-                        ))
+                        Encoding.UTF8.GetBytes(builder.Configuration["AuthOptions:Key"])
+                    )
                 };
             });
 
             var app = builder.Build();
-
             app.UseCors("AllowSpecificOrigin");
-
             app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             if (app.Environment.IsDevelopment())
@@ -117,10 +102,8 @@ namespace EventsApp.AuthorisationService
             }
 
             app.MapControllers();
-
             app.UseAuthentication();
             app.UseAuthorization();
-
             app.MapDefaultEndpoints();
             app.Run();
         }
