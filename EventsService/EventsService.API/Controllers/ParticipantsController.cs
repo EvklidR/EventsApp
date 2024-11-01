@@ -1,5 +1,5 @@
-﻿using EventsApp.EventsService.Application.DTOs;
-using EventsApp.EventsService.Application.Interfaces;
+﻿using EventsService.Application.DTOs;
+using EventsService.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;

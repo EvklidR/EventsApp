@@ -12,19 +12,19 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["EventsApp.EventsService/EventsApp.EventsService.csproj", "EventsApp.EventsService/"]
-RUN dotnet restore "./EventsApp.EventsService/EventsApp.EventsService.csproj"
+COPY ["EventsService/EventsService.csproj", "EventsService/"]
+RUN dotnet restore "./EventsService/EventsService.csproj"
 COPY . .
-WORKDIR "/src/EventsApp.EventsService"
-RUN dotnet build "./EventsApp.EventsService.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/EventsService"
+RUN dotnet build "./EventsService.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Этот этап используется для публикации проекта службы, который будет скопирован на последний этап
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./EventsApp.EventsService.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./EventsService.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # Этот этап используется в рабочей среде или при запуске из VS в обычном режиме (по умолчанию, когда конфигурация отладки не используется)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "EventsApp.EventsService.dll"]
+ENTRYPOINT ["dotnet", "EventsService.dll"]

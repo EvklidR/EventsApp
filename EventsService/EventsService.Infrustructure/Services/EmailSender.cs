@@ -1,10 +1,10 @@
 ﻿using System.Net.Mail;
 using System.Net;
-using EventsApp.EventsService.Application.Interfaces;
+using EventsService.Application.Interfaces;
 using Microsoft.Extensions.Configuration;
 
 
-namespace EventsApp.EventsService.Infrastructure.Services
+namespace EventsService.Infrastructure.Services
 {
     public class EmailSender : IEmailSender
     {

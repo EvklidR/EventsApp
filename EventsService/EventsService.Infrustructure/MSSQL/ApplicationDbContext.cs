@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using EventsApp.EventsService.Domain.Entities;
+using EventsService.Domain.Entities;
 
-namespace EventsApp.EventsService.Infrastructure.MSSQL
+namespace EventsService.Infrastructure.MSSQL
 {
     public class ApplicationDbContext : DbContext
     {

@@ -1,7 +1,7 @@
 ﻿using Moq;
 using Microsoft.AspNetCore.Mvc;
-using EventsApp.EventsService.Application.Interfaces;
-using EventsApp.EventsService.Application.DTOs;
+using EventsService.Application.Interfaces;
+using EventsService.Application.DTOs;
 using StackExchange.Redis;
 using Microsoft.Extensions.Configuration;
 

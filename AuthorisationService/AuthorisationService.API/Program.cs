@@ -9,6 +9,8 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using AuthorisationService.Application.DependencyInjection;
 using AuthorisationService.Api;
+using AuthorisationService.Infrastructure.DependencyInjection;
+
 
 namespace EventsApp.AuthorisationService
 {
@@ -32,7 +34,9 @@ namespace EventsApp.AuthorisationService
             builder.Services.AddControllers();
             builder.AddServiceDefaults();
             builder.Services.AddEndpointsApiExplorer();
+
             builder.Services.AddApplicationServices();
+            builder.Services.AddInfrastructureServices(builder.Configuration);
 
             builder.Services.AddSwaggerGen(c =>
             {
@@ -59,12 +63,6 @@ namespace EventsApp.AuthorisationService
                     }
                 });
             });
-
-            builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-            builder.Services.AddTransient<ITokenService, TokenService>();
-            builder.Services.AddScoped<IUserRepository, UserRepository>();
 
             builder.Services.AddAuthorization();
             builder.Services.AddAuthentication(options =>

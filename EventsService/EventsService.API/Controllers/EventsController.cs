@@ -1,6 +1,6 @@
-﻿using EventsApp.EventsService.Application.DTOs;
-using EventsApp.EventsService.Application.Interfaces;
-using EventsApp.EventsService.Domain.Interfaces;
+﻿using EventsService.Application.DTOs;
+using EventsService.Application.Interfaces;
+using EventsService.Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StackExchange.Redis;

@@ -1,10 +1,10 @@
-﻿using EventsApp.EventsService.Domain.Entities;
-using EventsApp.EventsService.Domain.Interfaces;
-using EventsApp.EventsService.Infrastructure.MSSQL;
+﻿using EventsService.Domain.Entities;
+using EventsService.Domain.Interfaces;
+using EventsService.Infrastructure.MSSQL;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
-namespace EventsApp.EventsService.Infrastructure.Repositories
+namespace EventsService.Infrastructure.Repositories
 {
     public class ParticipantRepository : IParticipantRepository
     {

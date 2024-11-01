@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Xunit;
 using Moq;
 using Microsoft.AspNetCore.Http;
-using EventsApp.EventsService.Domain.Entities;
-using EventsApp.EventsService.Infrastructure.Repositories;
-using EventsApp.EventsService.Infrastructure.MSSQL;
+using EventsService.Domain.Entities;
+using EventsService.Infrastructure.Repositories;
+using EventsService.Infrastructure.MSSQL;
 
 namespace RepositoryUnitTests
 {

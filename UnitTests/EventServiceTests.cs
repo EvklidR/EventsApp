@@ -1,17 +1,17 @@
 ﻿using Xunit;
 using Moq;
 using System.Threading.Tasks;
-using EventsApp.EventsService.Domain.Interfaces;
-using EventsApp.EventsService.Application.ApplicationServices;
-using EventsApp.EventsService.Application.DTOs;
+using EventsService.Domain.Interfaces;
+using EventsService.Application.ApplicationServices;
+using EventsService.Application.DTOs;
 using AutoMapper;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
-using EventsApp.EventsService.Domain.Entities;
+using EventsService.Domain.Entities;
 using System.Linq;
-using EventsApp.EventsService.Application.Interfaces;
+using EventsService.Application.Interfaces;
 
 namespace ServiceUnitTests
 {

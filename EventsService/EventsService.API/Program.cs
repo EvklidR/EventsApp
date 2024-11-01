@@ -1,22 +1,22 @@
-using EventsApp.EventsService.Infrastructure.MSSQL;
-using EventsApp.EventsService.Application.Interfaces;
-using EventsApp.EventsService.Application.ApplicationServices;
-using EventsApp.EventsService.Domain.Interfaces;
-using EventsApp.EventsService.Infrastructure.Repositories;
+using EventsService.Infrastructure.MSSQL;
+using EventsService.Application.Interfaces;
+using EventsService.Application.ApplicationServices;
+using EventsService.Domain.Interfaces;
+using EventsService.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using StackExchange.Redis;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using EventsApp.EventsService.Infrastructure.Services;
-using EventsApp.EventsService.Application.Validators;
+using EventsService.Infrastructure.Services;
+using EventsService.Application.Validators;
 using FluentValidation;
 using System.Text;
 
 
 
-namespace EventsApp.EventsService
+namespace EventsService
 {
     public class Program
     {
@@ -126,6 +126,8 @@ namespace EventsApp.EventsService
             });
 
             var app = builder.Build();
+
+            app.MapDefaultEndpoints();
 
             app.UseCors("AllowSpecificOrigin");
 
