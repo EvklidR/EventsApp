@@ -3,7 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using AuthorisationService.Application.DependencyInjection;
-using AuthorisationService.Api;
+using AuthorisationService.Api.Middleware;
 using AuthorisationService.Infrastructure.DependencyInjection;
 using AuthorisationService.Api.Filters;
 
@@ -34,7 +34,8 @@ namespace EventsApp.AuthorisationService
             builder.Services.AddApplicationServices();
             builder.Services.AddInfrastructureServices(builder.Configuration);
 
-            builder.Services.AddScoped<ValidateModelAttribute>();
+            builder.Services.AddScoped<ValidateLoginModelAttribute>();
+            builder.Services.AddScoped<ValidateCreateUserDtoAttribute>();
 
 
             builder.Services.AddSwaggerGen(c =>

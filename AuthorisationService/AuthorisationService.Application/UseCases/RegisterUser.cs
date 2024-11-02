@@ -6,6 +6,7 @@ using FluentValidation;
 using AuthorisationService.Application.Models;
 using AuthorisationService.Domain.Entities;
 using System.Security.Claims;
+using AuthorisationService.Application.Exceptions;
 
 namespace AuthorisationService.Application.UseCases
 {
@@ -26,14 +27,13 @@ namespace AuthorisationService.Application.UseCases
 
         public async Task<AuthenticatedResponse> RegisterAsync(CreateUserDto createUserDto)
         {
-            var validationResult = await _validator.ValidateAsync(createUserDto);
-            if (!validationResult.IsValid)
+            var existingUser = await _userRepository.GetAsync(u => u.Login == createUserDto.Login || u.Email == createUserDto.Email);
+            if (existingUser != null)
             {
-                throw new ValidationException(validationResult.Errors);
+                throw new AlreadyExistsException("A user with the same login or email already exists.");
             }
 
             var user = _mapper.Map<User>(createUserDto);
-            user.RefreshToken = null; // Initialize refresh token
 
             _userRepository.AddUser(user);
             await _userRepository.CompleteAsync();

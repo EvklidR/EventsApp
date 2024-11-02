@@ -2,6 +2,7 @@
 using AuthorisationService.Application.Models;
 using AuthorisationService.Domain.Interfaces;
 using System.Security.Claims;
+using AuthorisationService.Application.Exceptions;
 
 namespace AuthorisationService.Application.UseCases
 {
@@ -19,9 +20,15 @@ namespace AuthorisationService.Application.UseCases
         public async Task<AuthenticatedResponse> AuthenticateAsync(LoginModel loginModel)
         {
             var user = await _userRepository.GetAsync(u => u.Login == loginModel.Username);
-            if (user == null || !BCrypt.Net.BCrypt.Verify(loginModel.Password, user.HashedPassword))
+
+            if (user == null)
+            { 
+                throw new BadAuthorisationException("User with such login not found");
+            }
+
+            if (!BCrypt.Net.BCrypt.Verify(loginModel.Password, user.HashedPassword))
             {
-                return null;
+                throw new BadAuthorisationException("Password and login don't match");
             }
 
             var claims = new List<Claim>

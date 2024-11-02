@@ -17,7 +17,7 @@ namespace AuthorisationService.Application.Validators
 
             RuleFor(x => x.Password)
                 .NotEmpty().WithMessage("Password is required.")
-                .MinimumLength(6).WithMessage("Password must be at least 6 characters long.");
+                .MinimumLength(8).WithMessage("Password must be at least 8 characters long.");
 
             RuleFor(x => x.Role)
                 .IsInEnum().WithMessage("Role is invalid.");

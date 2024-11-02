@@ -2,6 +2,7 @@
 using AuthorisationService.Application.Interfaces;
 using AuthorisationService.Application.Models;
 using Microsoft.AspNetCore.Authorization;
+using AuthorisationService.Api.Filters;
 
 namespace AuthorisationService.Api.Controllers
 {

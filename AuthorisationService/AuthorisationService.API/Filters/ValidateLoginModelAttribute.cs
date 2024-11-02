@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using FluentValidation;
 using FluentValidation.Results;
@@ -7,11 +6,11 @@ using AuthorisationService.Application.Models;
 
 namespace AuthorisationService.Api.Filters
 {
-    public class ValidateModelAttribute : IAsyncActionFilter
+    public class ValidateLoginModelAttribute : IAsyncActionFilter
     {
         private readonly IValidator<LoginModel> _validator;
 
-        public ValidateModelAttribute(IValidator<LoginModel> validator)
+        public ValidateLoginModelAttribute(IValidator<LoginModel> validator)
         {
             _validator = validator;
         }

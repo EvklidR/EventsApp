@@ -18,14 +18,21 @@ namespace AuthorisationService.Api.Controllers
         }
 
         [HttpPost("login")]
-        [ServiceFilter(typeof(ValidateModelAttribute))]
+        [ServiceFilter(typeof(ValidateLoginModelAttribute))]
         public async Task<IActionResult> Login([FromBody] LoginModel loginModel)
         {
             var response = await _userServiceFacade.AuthenticateAsync(loginModel);
+            if (response == null)
+            {
+                return Ok(new { message = "Invalid username or password." });
+            }
+
             return Ok(response);
         }
 
+
         [HttpPost("register")]
+        [ServiceFilter(typeof(ValidateCreateUserDtoAttribute))]
         public async Task<IActionResult> Register([FromBody] CreateUserDto createUserDto)
         {
             var response = await _userServiceFacade.RegisterAsync(createUserDto);

@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using AuthorisationService.Domain.Interfaces;
 using System.Text;
 using Microsoft.Extensions.Configuration;
-
+using AuthorisationService.Application.Exceptions;
 
 namespace AuthorisationService.Infrastructure.Services
 {
@@ -60,8 +60,9 @@ namespace AuthorisationService.Infrastructure.Services
             SecurityToken securityToken;
             var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
             var jwtSecurityToken = securityToken as JwtSecurityToken;
+
             if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
-                throw new SecurityTokenException("Invalid token");
+                throw new BadRequestException("Assecc token isn't valid");
 
             return principal;
         }

@@ -26,22 +26,6 @@ namespace AuthorisationService.Infrastructure.Repositories
             _context.Users.Add(user);
         }
 
-        //public async Task<User?> FindUserByCredentialsAsync(string login, string password)
-        //{
-
-        //    var user = await _context.Users.FirstOrDefaultAsync(u => u.Login == login);
-        //    if (!BCrypt.Net.BCrypt.Verify(password, user.HashedPassword))
-        //    {
-        //        return null;
-        //    }
-        //    if (user == null)
-        //    {
-        //        return null;
-        //    }
-
-        //    return user;
-        //}
-
         public void UpdateUser(User user)
         {
             _context.Users.Update(user);
