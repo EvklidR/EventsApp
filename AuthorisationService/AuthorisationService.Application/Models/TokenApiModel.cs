@@ -1,6 +1,6 @@
-﻿namespace AuthorisationService.Infrastructure.Models
+﻿namespace AuthorisationService.Application.Models
 {
-    public class AuthenticatedResponse
+    public class TokenApiModel
     {
         public string? AccessToken { get; set; }
         public string? RefreshToken { get; set; }

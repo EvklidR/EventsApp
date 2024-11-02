@@ -4,6 +4,7 @@ using FluentValidation;
 using AutoMapper;
 using AuthorisationService.Application.Interfaces;
 using AuthorisationService.Application.UseCases;
+using AuthorisationService.Application.Validators;
 
 namespace AuthorisationService.Application.DependencyInjection
 {
@@ -13,10 +14,11 @@ namespace AuthorisationService.Application.DependencyInjection
         {
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-            services.AddScoped<IAddUser, AddUser>();
-            services.AddScoped<IGetUserById, GetUserById>();
-            services.AddScoped<IFindUserByCredentials, FindUserByCredentials>();
-            services.AddScoped<IUpdateUser, UpdateUser>();
+
+            services.AddScoped<ILoginUser, LoginUser>();
+            services.AddScoped<IRegisterUser, RegisterUser>();
+            services.AddScoped<IRefreshToken, RefreshToken>();
+            services.AddScoped<IRevokeToken, RevokeToken>();
             services.AddScoped<IUserServiceFacade, UserServiceFacade>();
 
             return services;

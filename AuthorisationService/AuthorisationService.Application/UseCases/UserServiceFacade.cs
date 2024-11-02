@@ -1,28 +1,42 @@
-﻿using AuthorisationService.Application.Interfaces;
-using AuthorisationService.Application.DTOs;
-using AuthorisationService.Domain.Entities;
+﻿using AuthorisationService.Application.DTOs;
+using AuthorisationService.Application.Interfaces;
+using AuthorisationService.Application.Models;
 
 namespace AuthorisationService.Application.UseCases
 {
     public class UserServiceFacade : IUserServiceFacade
     {
-        private readonly IAddUser _addUser;
-        private readonly IGetUserById _getUserById;
-        private readonly IFindUserByCredentials _findUserByCredentials;
-        private readonly IUpdateUser _updateUser;
+        private readonly ILoginUser _loginUser;
+        private readonly IRegisterUser _registerUser;
+        private readonly IRefreshToken _refreshToken;
+        private readonly IRevokeToken _revokeToken;
 
-        public UserServiceFacade(IAddUser addUser, IGetUserById getUserById, IFindUserByCredentials findUserByCredentials, IUpdateUser updateUser)
+        public UserServiceFacade(ILoginUser loginUser, IRegisterUser registerUser, IRefreshToken refreshToken, IRevokeToken revokeToken)
         {
-            _addUser = addUser;
-            _getUserById = getUserById;
-            _findUserByCredentials = findUserByCredentials;
-            _updateUser = updateUser;
+            _loginUser = loginUser;
+            _registerUser = registerUser;
+            _refreshToken = refreshToken;
+            _revokeToken = revokeToken;
         }
 
-        public Task<User> AddUserAsync(CreateUserDto createUserDto) => _addUser.AddUserAsync(createUserDto);
-        public Task<User?> GetByIdAsync(int id) => _getUserById.GetByIdAsync(id);
-        public Task<User> FindUserByCredentialsAsync(string login, string password) => _findUserByCredentials.FindUserByCredentialsAsync(login, password);
-        public Task<User> UpdateUserAsync(User userUp) => _updateUser.UpdateUserAsync(userUp);
-    }
+        public async Task<AuthenticatedResponse> AuthenticateAsync(LoginModel loginModel)
+        {
+            return await _loginUser.AuthenticateAsync(loginModel);
+        }
 
+        public async Task<AuthenticatedResponse> RegisterAsync(CreateUserDto createUserDto)
+        {
+            return await _registerUser.RegisterAsync(createUserDto);
+        }
+
+        public async Task<AuthenticatedResponse> RefreshAccessTokenAsync(TokenApiModel tokenApiModel)
+        {
+            return await _refreshToken.RefreshAccessTokenAsync(tokenApiModel);
+        }
+
+        public async Task RevokeTokenAsync(string username)
+        {
+            await _revokeToken.RevokeAsync(username);
+        }
+    }
 }

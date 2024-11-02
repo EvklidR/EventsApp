@@ -1,7 +1,7 @@
-﻿using AuthorisationService.Domain.Interfaces;
-using AuthorisationService.Infrastructure.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using AuthorisationService.Application.Interfaces;
+using AuthorisationService.Application.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 
 namespace AuthorisationService.Api.Controllers
 {
@@ -9,55 +9,26 @@ namespace AuthorisationService.Api.Controllers
     [ApiController]
     public class TokenController : ControllerBase
     {
-        private readonly IUserRepository _userRepository;
-        private readonly ITokenService _tokenService;
+        private readonly IUserServiceFacade _userServiceFacade;
 
-        public TokenController(IUserRepository userRepository, ITokenService tokenService)
+        public TokenController(IUserServiceFacade userServiceFacade)
         {
-            _userRepository = userRepository;
-            _tokenService = tokenService;
+            _userServiceFacade = userServiceFacade;
         }
 
-        [HttpPost]
-        [Route("refresh")]
-        public async Task<IActionResult> Refresh(TokenApiModel tokenApiModel)
+        [HttpPost("refresh")]
+        public async Task<IActionResult> Refresh([FromBody] TokenApiModel tokenApiModel)
         {
-            if (tokenApiModel is null)
-                return BadRequest("Invalid client request");
-
-            string accessToken = tokenApiModel.AccessToken;
-            string refreshToken = tokenApiModel.RefreshToken;
-
-            var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken);
-            var username = principal.Identity.Name;
-
-            var user = await _userRepository.GetAsync(u => u.Login == username);
-
-            if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
-                return BadRequest("Invalid client request");
-
-            var newAccessToken = _tokenService.GenerateAccessToken(principal.Claims);
-
-            return Ok(new AuthenticatedResponse()
-            {
-                AccessToken = newAccessToken,
-                RefreshToken = user.RefreshToken
-            });
+            var response = await _userServiceFacade.RefreshAccessTokenAsync(tokenApiModel);
+            return Ok(response);
         }
 
-        [HttpPost, Authorize]
-        [Route("revoke")]
+        [HttpPost("revoke")]
+        [Authorize]
         public async Task<IActionResult> Revoke()
         {
             var username = User.Identity.Name;
-
-            var user = await _userRepository.GetAsync(u => u.Login == username);
-            if (user == null) return BadRequest();
-
-            user.RefreshToken = null;
-
-            await _userRepository.CompleteAsync();
-
+            await _userServiceFacade.RevokeTokenAsync(username);
             return NoContent();
         }
     }

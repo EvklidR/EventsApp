@@ -1,4 +1,4 @@
-﻿namespace AuthorisationService.Infrastructure.Models
+﻿namespace AuthorisationService.Application.Models
 {
     public class LoginModel
     {

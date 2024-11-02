@@ -1,15 +1,11 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using AuthorisationService.Infrastructure.MSSQL;
-using AuthorisationService.Domain.Interfaces;
-using AuthorisationService.Infrastructure.Repositories;
-using AuthorisationService.Infrastructure.Services;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using Microsoft.EntityFrameworkCore;
 using AuthorisationService.Application.DependencyInjection;
 using AuthorisationService.Api;
 using AuthorisationService.Infrastructure.DependencyInjection;
+using AuthorisationService.Api.Filters;
 
 
 namespace EventsApp.AuthorisationService
@@ -37,6 +33,9 @@ namespace EventsApp.AuthorisationService
 
             builder.Services.AddApplicationServices();
             builder.Services.AddInfrastructureServices(builder.Configuration);
+
+            builder.Services.AddScoped<ValidateModelAttribute>();
+
 
             builder.Services.AddSwaggerGen(c =>
             {

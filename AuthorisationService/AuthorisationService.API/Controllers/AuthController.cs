@@ -1,96 +1,35 @@
-﻿//using AuthorisationService.Infrastructure.Models;
-//using Microsoft.AspNetCore.Mvc;
-//using System.Security.Claims;
-//using AuthorisationService.Domain.Interfaces;
-//using AuthorisationService.Application.Interfaces;
-//using AuthorisationService.Application.DTOs;
-//using AutoMapper;
+﻿using Microsoft.AspNetCore.Mvc;
+using AuthorisationService.Application.Interfaces;
+using AuthorisationService.Application.Models;
+using AuthorisationService.Api.Filters;
+using AuthorisationService.Application.DTOs;
 
-//namespace AuthorisationService.Api.Controllers
-//{
-//    [Route("[controller]")]
-//    [ApiController]
-//    public class AuthController : ControllerBase
-//    {
-//        private readonly IUserService _userService;
-//        private readonly ITokenService _tokenService;
-//        private readonly IMapper _mapper;
+namespace AuthorisationService.Api.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class AuthController : ControllerBase
+    {
+        private readonly IUserServiceFacade _userServiceFacade;
 
-//        public AuthController(IUserService userService, ITokenService tokenService, IMapper mapper)
-//        {
-//            _mapper = mapper;
-//            _userService = userService;
-//            _tokenService = tokenService;
-//        }
+        public AuthController(IUserServiceFacade userServiceFacade)
+        {
+            _userServiceFacade = userServiceFacade;
+        }
 
-//        [HttpPost, Route("login")]
-//        public async Task<IActionResult> Login([FromBody] LoginModel loginModel)
-//        {
-//            if (loginModel is null)
-//            {
-//                return BadRequest("Invalid client request");
-//            }
+        [HttpPost("login")]
+        [ServiceFilter(typeof(ValidateModelAttribute))]
+        public async Task<IActionResult> Login([FromBody] LoginModel loginModel)
+        {
+            var response = await _userServiceFacade.AuthenticateAsync(loginModel);
+            return Ok(response);
+        }
 
-//            var user = await _userService.FindUserByCredentialsAsync(loginModel.Username, loginModel.Password);
-//            if (user is null)
-//                return Unauthorized();
-
-//            var claims = new List<Claim>
-//        {
-//            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-//            new Claim(ClaimTypes.Name, loginModel.Username),
-//            new Claim(ClaimTypes.Role, (user.Role).ToString())
-//        };
-//            var accessToken = _tokenService.GenerateAccessToken(claims);
-//            var refreshToken = _tokenService.GenerateRefreshToken();
-//            user.RefreshToken = refreshToken;
-//            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(10);
-
-//            await _userService.UpdateUserAsync(user);
-
-//            return Ok(new AuthenticatedResponse
-//            {
-//                AccessToken = accessToken,
-//                RefreshToken = refreshToken
-//            });
-//        }
-
-//        [HttpPost, Route("register")]
-//        public async Task<IActionResult> Register([FromBody] CreateUserDto createUserDto)
-//        {
-//            if (createUserDto is null)
-//            {
-//                return BadRequest("Invalid client request");
-//            }
-
-//            try
-//            {
-//                var newUser = await _userService.AddUserAsync(createUserDto);
-
-//                var claims = new List<Claim>
-//                {
-//                    new Claim(ClaimTypes.NameIdentifier, newUser.Id.ToString()),
-//                    new Claim(ClaimTypes.Name, createUserDto.Login),
-//                    new Claim(ClaimTypes.Role, newUser.Role.ToString())
-//                };
-
-//                var accessToken = _tokenService.GenerateAccessToken(claims);
-//                var refreshToken = _tokenService.GenerateRefreshToken();
-//                newUser.RefreshToken = refreshToken;
-//                newUser.RefreshTokenExpiryTime = DateTime.Now.AddDays(10);
-
-//                await _userService.UpdateUserAsync(newUser);
-//                return Ok(new AuthenticatedResponse
-//                {
-//                    AccessToken = accessToken,
-//                    RefreshToken = refreshToken
-//                });
-//            }
-//            catch (Exception ex)
-//            {
-//                return BadRequest(ex.Message);
-//            }
-//        }
-
-//    }
-//}
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] CreateUserDto createUserDto)
+        {
+            var response = await _userServiceFacade.RegisterAsync(createUserDto);
+            return Ok(response);
+        }
+    }
+}
