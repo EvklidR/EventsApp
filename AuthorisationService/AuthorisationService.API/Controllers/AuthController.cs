@@ -18,15 +18,9 @@ namespace AuthorisationService.Api.Controllers
         }
 
         [HttpPost("login")]
-        [ServiceFilter(typeof(ValidateLoginModelAttribute))]
-        public async Task<IActionResult> Login([FromBody] LoginModel loginModel)
+        public async Task<IActionResult> Login(LoginModel loginModel)
         {
             var response = await _userServiceFacade.AuthenticateAsync(loginModel);
-            if (response == null)
-            {
-                return Ok(new { message = "Invalid username or password." });
-            }
-
             return Ok(response);
         }
 

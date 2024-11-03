@@ -58,12 +58,23 @@ namespace AuthorisationService.Infrastructure.Services
 
             var tokenHandler = new JwtSecurityTokenHandler();
             SecurityToken securityToken;
-            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
-            var jwtSecurityToken = securityToken as JwtSecurityToken;
 
-            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
-                throw new BadRequestException("Assecc token isn't valid");
+            ClaimsPrincipal principal;
 
+            try
+            {
+                principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
+
+                var jwtSecurityToken = securityToken as JwtSecurityToken;
+                if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    throw new Exception();
+                }
+            }
+            catch (Exception)
+            {
+                throw new BadRequestException("Access token isn't valid");
+            }
             return principal;
         }
     }

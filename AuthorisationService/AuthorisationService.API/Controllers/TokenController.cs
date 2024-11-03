@@ -18,7 +18,7 @@ namespace AuthorisationService.Api.Controllers
         }
 
         [HttpPost("refresh")]
-        public async Task<IActionResult> Refresh([FromBody] TokenApiModel tokenApiModel)
+        public async Task<IActionResult> Refresh(TokenApiModel tokenApiModel)
         {
             var response = await _userServiceFacade.RefreshAccessTokenAsync(tokenApiModel);
             return Ok(response);
