@@ -2,7 +2,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using AuthorisationService.Domain.Interfaces;
+using AuthorisationService.Application.Interfaces;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using AuthorisationService.Application.Exceptions;

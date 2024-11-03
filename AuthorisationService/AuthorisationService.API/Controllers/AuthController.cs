@@ -6,7 +6,7 @@ using AuthorisationService.Application.DTOs;
 
 namespace AuthorisationService.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
     {

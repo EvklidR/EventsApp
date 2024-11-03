@@ -1,11 +1,6 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using System.Text;
 using AuthorisationService.Application.DependencyInjection;
 using AuthorisationService.Api.Middleware;
 using AuthorisationService.Infrastructure.DependencyInjection;
-using AuthorisationService.Api.Filters;
 using AuthorisationService.Api.DependencyInjection;
 
 

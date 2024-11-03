@@ -1,21 +1,19 @@
 ﻿using EventsService.Application.DTOs;
-using EventsService.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using FluentValidation;
-using Microsoft.AspNetCore.Mvc.Diagnostics;
+using EventsService.Application;
 
 
 [Route("api/[controller]")]
 [ApiController]
 public class ParticipantsController : ControllerBase
 {
-    private readonly IParticipantService _participantService;
+    private readonly ParticipantsUseCasesFacade _participantsFacade;
 
-    public ParticipantsController(IParticipantService participantService)
+    public ParticipantsController(ParticipantsUseCasesFacade participantsFacade)
     {
-        _participantService = participantService;
+        _participantsFacade = participantsFacade;
     }
 
     [Authorize]
@@ -24,6 +22,7 @@ public class ParticipantsController : ControllerBase
     {
 
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+
         if (userIdClaim == null)
         {
             return Unauthorized();
@@ -31,7 +30,7 @@ public class ParticipantsController : ControllerBase
 
         int userId = int.Parse(userIdClaim.Value);
         profile.UserId = userId;
-        await _participantService.RegisterUserForEventAsync(profile);
+        await _participantsFacade.RegisterUserForEventAsync(profile);
         return NoContent();
 
     }
@@ -48,7 +47,7 @@ public class ParticipantsController : ControllerBase
         }
 
         int userId = int.Parse(userIdClaim.Value);
-        await _participantService.UnregisterUserFromEventAsync(eventId, userId);
+        await _participantsFacade.UnregisterUserFromEventAsync(eventId, userId);
         return NoContent();
 
     }
@@ -65,7 +64,7 @@ public class ParticipantsController : ControllerBase
         }
 
         int userId = int.Parse(userIdClaim.Value);
-        var userEvents = _participantService.GetUserEvents(userId);
+        var userEvents = _participantsFacade.GetUserEvents(userId);
         return Ok(userEvents);
 
     }
@@ -74,7 +73,7 @@ public class ParticipantsController : ControllerBase
     public async Task<ActionResult<ParticipantOfEventDto>> GetParticipantById(int participantId)
     {
 
-        var participant = await _participantService.GetParticipantByIdAsync(participantId);
+        var participant = await _participantsFacade.GetParticipantByIdAsync(participantId);
         if (participant == null)
         {
             return NotFound();
@@ -87,7 +86,7 @@ public class ParticipantsController : ControllerBase
     public async Task<ActionResult<IEnumerable<ParticipantOfEventDto>>> GetParticipantsByEventId(int eventId)
     {
 
-        var participants = await _participantService.GetParticipantsByEventIdAsync(eventId);
+        var participants = await _participantsFacade.GetEventParticipantsAsync(eventId);
         return Ok(participants);
 
     }

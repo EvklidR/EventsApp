@@ -1,10 +1,8 @@
 ﻿using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using FluentValidation;
-using AutoMapper;
 using AuthorisationService.Application.Interfaces;
 using AuthorisationService.Application.UseCases;
-using AuthorisationService.Application.Validators;
 
 namespace AuthorisationService.Application.DependencyInjection
 {

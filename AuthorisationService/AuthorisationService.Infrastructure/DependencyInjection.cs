@@ -5,6 +5,7 @@ using AuthorisationService.Infrastructure.MSSQL;
 using AuthorisationService.Domain.Interfaces;
 using AuthorisationService.Infrastructure.Repositories;
 using AuthorisationService.Infrastructure.Services;
+using AuthorisationService.Application.Interfaces;
 
 namespace AuthorisationService.Infrastructure.DependencyInjection
 {

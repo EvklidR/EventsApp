@@ -28,7 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\EventsApp.ServiceDefaults\EventsApp.ServiceDefaults.csproj" />
     <ProjectReference Include="..\EventsService.Application\EventsService.Application.csproj" />
-    <ProjectReference Include="..\EventsService.Infrustructure\EventsService.Infrustructure.csproj" />
+    <ProjectReference Include="..\EventsService.Infrastructure\EventsService.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -48,6 +48,10 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Filters\" />
   </ItemGroup>
 
 </Project>

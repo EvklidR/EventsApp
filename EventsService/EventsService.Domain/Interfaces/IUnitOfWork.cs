@@ -1,6 +1,6 @@
 ﻿namespace EventsService.Domain.Interfaces
 {
-    public interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork
     {
         IEventRepository Events { get; }
         IParticipantRepository Participants { get; }

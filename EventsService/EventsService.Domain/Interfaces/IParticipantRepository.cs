@@ -1,12 +1,12 @@
 ﻿using EventsService.Domain.Entities;
+using System.Linq.Expressions;
 
 namespace EventsService.Domain.Interfaces
 {
     public interface IParticipantRepository
     {
-        Task AddAsync(ParticipantOfEvent participant);
-        Task DeleteAsync(int eventId, int userId);
-        Task<ParticipantOfEvent> GetByIdAsync(int participantId);
-        Task<IEnumerable<ParticipantOfEvent>> GetByEventIdAsync(int eventId);
+        void Add(ParticipantOfEvent participant);
+        void Delete(ParticipantOfEvent participantToDelete);
+        Task<IEnumerable<ParticipantOfEvent>?> GetAsync(Expression<Func<ParticipantOfEvent, bool>> predicate);
     }
 }

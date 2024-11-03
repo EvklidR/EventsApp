@@ -1,109 +1,65 @@
-﻿using EventsService.Application.DTOs;
+﻿using EventsService.Application;
+using EventsService.Application.DTOs;
 using EventsService.Application.Interfaces;
-using EventsService.Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using StackExchange.Redis;
 
 
 [Route("api/[controller]")]
 [ApiController]
 public class EventsController : ControllerBase
 {
-    private readonly IEventService _eventService;
-    private readonly string _imagePath;
-    private readonly IDatabase _redisDb;
+    private readonly EventsUseCasesFacade _eventsFacade;
+    private readonly IImageService _imageService;
 
-    public EventsController(IEventService eventService,
-                            IConfiguration configuration,
-                            IConnectionMultiplexer redis)
+    public EventsController(EventsUseCasesFacade eventsUseCasesFacade, IImageService imageService)
     {
-        _imagePath = Path.Combine(configuration["ImageSettings:ImagePath"]);
-        _eventService = eventService;
-        _redisDb = redis.GetDatabase();
+        _eventsFacade = eventsUseCasesFacade;
+        _imageService = imageService;
     }
 
     [HttpGet("get-file/{fileName}")]
     public async Task<IActionResult> GetFile(string fileName)
     {
-
-        byte[] cachedFile = await _redisDb.StringGetAsync(fileName);
-        if (cachedFile != null && cachedFile.Length > 0)
-        {
-            return File(cachedFile, "application/octet-stream", fileName);
-        }
-
-        var filePath = Path.Combine(_imagePath, fileName);
-
-        if (!System.IO.File.Exists(filePath))
-        {
-            return NotFound("File not found.");
-        }
-
-        byte[] fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
-        await _redisDb.StringSetAsync(fileName, fileBytes, TimeSpan.FromMinutes(30));
-
+        byte[] fileBytes = await _imageService.GetImageAsync(fileName);
         return File(fileBytes, "application/octet-stream", fileName);
-
     }
 
     [HttpGet("get-event-by-name/{name}")]
     public IActionResult GetEventByName(string name)
     {
-        if (string.IsNullOrEmpty(name))
-        {
-            return BadRequest("Event name cannot be null or empty.");
-        }
-
-
-        var eventDto = _eventService.GetEventByNameAsync(name);
-        if (eventDto == null)
-        {
-            return NotFound("Event not found.");
-        }
-
+        var eventDto = _eventsFacade.GetEventByName(name);
         return Ok(eventDto);
     }
 
     [HttpGet("{id}")]
     public ActionResult<EventDto> GetEventById(int id)
     {
-
-        var eventDto = _eventService.GetEventByIdAsync(id);
-        if (eventDto == null)
-        {
-            return NotFound("Event not found.");
-        }
+        var eventDto = _eventsFacade.GetEventById(id);
         return Ok(eventDto);
     }
 
     [HttpGet]
     public ActionResult<IEnumerable<EventDto>> GetEvents([FromQuery] EventFilterDto filterDto)
     {
-
-        var events = _eventService.GetFilteredEvents(filterDto);
+        var events = _eventsFacade.GetFilteredEvents(filterDto);
         return Ok(events);
-
     }
 
     [Authorize(Roles = "admin")]
     [HttpPost]
     public async Task<IActionResult> CreateEvent([FromForm] CreateEventDto createEventDto, IFormFile imageFile)
     {
-
-        var createdEvent = await _eventService.CreateEventAsync(createEventDto, imageFile);
+        var createdEvent = await _eventsFacade.CreateEvent(createEventDto, imageFile);
         return CreatedAtAction(nameof(GetEventById), new { id = createdEvent.Id }, createdEvent);
-
     }
 
     [Authorize(Roles = "admin")]
     [HttpPut]
     public async Task<IActionResult> UpdateEvent(UpdateEventDto updateEventDto)
     {
-
-        await _eventService.UpdateEventAsync(updateEventDto);
+        await _eventsFacade.UpdateEvent(updateEventDto);
         return NoContent();
-
     }
 
     [Authorize(Roles = "admin")]
@@ -111,7 +67,7 @@ public class EventsController : ControllerBase
     public async Task<IActionResult> DeleteEvent(int id)
     {
 
-        await _eventService.DeleteEventAsync(id);
+        await _eventsFacade.DeleteEvent(id);
         return NoContent();
 
     }

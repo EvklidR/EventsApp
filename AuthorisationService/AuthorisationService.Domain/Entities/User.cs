@@ -1,6 +1,4 @@
-﻿
-using AuthorisationService.Domain.Enums;
-using System.Data;
+﻿using AuthorisationService.Domain.Enums;
 
 namespace AuthorisationService.Domain.Entities
 {
