@@ -1,6 +1,7 @@
 ﻿using EventsService.Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using StackExchange.Redis;
+using EventsService.Application.Exceptions;
 
 namespace EventsService.Infrastructure.Services
 {
@@ -15,21 +16,30 @@ namespace EventsService.Infrastructure.Services
             _imagePath = imagePath;
         }
 
-        public async Task<string?> SaveImageAsync(IFormFile imageFile)
+        public async Task<string> SaveImageAsync(IFormFile imageFile)
         {
-            if (imageFile.Length > 0)
-            {
-                var fileName = Path.GetFileName(imageFile.FileName);
-                var filePath = Path.Combine(_imagePath, fileName);
 
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await imageFile.CopyToAsync(stream);
-                }
-                return fileName;
+            var fileExtension = Path.GetExtension(imageFile.FileName);
+            var timestamp = DateTime.UtcNow.ToString("yyyyMMddHHmmssfff");
+            var randomNumber = new Random().Next(1000, 9999);
+            var uniqueFileName = $"img_{timestamp}_{randomNumber}{fileExtension}";
+            var filePath = Path.Combine(_imagePath, uniqueFileName);
+
+            while (File.Exists(filePath))
+            {
+                randomNumber = new Random().Next(1000, 9999);
+                uniqueFileName = $"img_{timestamp}_{randomNumber}{fileExtension}";
+                filePath = Path.Combine(_imagePath, uniqueFileName);
             }
-            return null;
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await imageFile.CopyToAsync(stream);
+            }
+            return uniqueFileName;
+
         }
+
 
         public async Task<byte[]> GetImageAsync(string fileName)
         {
@@ -43,7 +53,7 @@ namespace EventsService.Infrastructure.Services
 
             if (!File.Exists(filePath))
             {
-                throw new FileNotFoundException("File not found.", fileName);
+                throw new NotFoundException($"File {fileName} not found");
             }
 
             byte[] fileBytes = await File.ReadAllBytesAsync(filePath);

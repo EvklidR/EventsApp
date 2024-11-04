@@ -3,6 +3,7 @@ using AutoMapper;
 using EventsService.Application.Interfaces.EventsUseCases;
 using EventsService.Domain.Interfaces;
 using EventsService.Application.Exceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace EventsService.Application.UseCases.EventsUseCases
 {
@@ -17,9 +18,9 @@ namespace EventsService.Application.UseCases.EventsUseCases
             _mapper = mapper;
         }
 
-        public EventDto Execute(string name)
+        public async Task<EventDto> ExecuteAsync(string name)
         {
-            var eventEntity = _unitOfWork.Events.GetAll().FirstOrDefault(c => c.Name.ToLower() == name.ToLower());
+            var eventEntity = await _unitOfWork.Events.GetAll().FirstOrDefaultAsync(c => c.Name == name);
 
             if (eventEntity == null)
             {

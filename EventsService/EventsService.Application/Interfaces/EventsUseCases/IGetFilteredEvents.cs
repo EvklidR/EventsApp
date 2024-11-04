@@ -4,6 +4,6 @@ namespace EventsService.Application.Interfaces.EventsUseCases
 {
     public interface IGetFilteredEvents
     {
-        IEnumerable<EventDto>? Execute(EventFilterDto filterDto);
+        Task<IEnumerable<EventDto>?> ExecuteAsync(EventFilterDto filterDto);
     }
 }

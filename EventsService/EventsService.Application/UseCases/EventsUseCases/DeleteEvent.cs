@@ -1,6 +1,7 @@
 ﻿using EventsService.Application.Exceptions;
 using EventsService.Application.Interfaces.EventsUseCases;
 using EventsService.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace EventsService.Application.UseCases.EventsUseCases
 {
@@ -15,7 +16,9 @@ namespace EventsService.Application.UseCases.EventsUseCases
 
         public async Task ExecuteAsync(int id)
         {
-            var eventEntity = _unitOfWork.Events.GetAll().FirstOrDefault(e => e.Id == id);
+            var eventEntitys = _unitOfWork.Events.GetAll();
+                
+            var eventEntity = await eventEntitys.FirstOrDefaultAsync(e => e.Id == id);
 
             if (eventEntity == null)
             {

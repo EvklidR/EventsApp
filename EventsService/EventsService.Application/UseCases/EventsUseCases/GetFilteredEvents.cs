@@ -4,6 +4,7 @@ using AutoMapper.QueryableExtensions;
 using EventsService.Application.Interfaces.EventsUseCases;
 using EventsService.Domain.Interfaces;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace EventsService.Application.UseCases.EventsUseCases
 {
@@ -18,7 +19,7 @@ namespace EventsService.Application.UseCases.EventsUseCases
             _unitOfWork = unitOfWork;
         }
 
-        public IEnumerable<EventDto>? Execute(EventFilterDto filterDto)
+        public async Task<IEnumerable<EventDto>?> ExecuteAsync(EventFilterDto filterDto)
         {
             var query = _unitOfWork.Events.GetAll();
 
@@ -37,11 +38,11 @@ namespace EventsService.Application.UseCases.EventsUseCases
                 query = query.Where(e => e.Category == filterDto.Category.Value);
             }
 
-            return query
+            return await query
                 .Skip((filterDto.PageNumber - 1) * filterDto.PageSize)
                 .Take(filterDto.PageSize)
                 .ProjectTo<EventDto>(_mapper.ConfigurationProvider)
-                .ToList();
+                .ToListAsync();
         }
     }
 }

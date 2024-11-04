@@ -1,9 +1,6 @@
 ﻿using EventsService.Domain.Entities;
 using EventsService.Domain.Interfaces;
 using EventsService.Infrastructure.MSSQL;
-using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
 
 namespace EventsService.Infrastructure.Repositories
 {
@@ -26,9 +23,9 @@ namespace EventsService.Infrastructure.Repositories
             _context.Participants.Remove(participantToDelete);
         }
 
-        public async Task<IEnumerable<ParticipantOfEvent>?> GetAsync(Expression<Func<ParticipantOfEvent, bool>> predicate)
+        public IQueryable<ParticipantOfEvent> GetAll()
         {
-            return await _context.Participants.Where(predicate).ToListAsync();
+            return _context.Participants.AsQueryable();
         }
 
     }

@@ -17,7 +17,6 @@ namespace EventsService.Application.DependencyInjection
 
             services.AddValidatorsFromAssemblyContaining<CreateEventDtoValidator>();
             services.AddValidatorsFromAssemblyContaining<CreateProfileDtoValidator>();
-            services.AddValidatorsFromAssemblyContaining<ParticipantOfEventDtoValidator>();
             services.AddValidatorsFromAssemblyContaining<UpdateEventDtoValidator>();
 
             services.AddAutoMapper(Assembly.GetExecutingAssembly());

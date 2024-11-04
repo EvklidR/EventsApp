@@ -2,7 +2,8 @@
 using EventsService.Application.DTOs;
 using EventsService.Application.Interfaces.ParticipantsUseCases;
 using EventsService.Domain.Interfaces;
-
+using Microsoft.EntityFrameworkCore;
+using EventsService.Application.Exceptions;
 namespace EventsService.Application.UseCases.ParticipantsUseCases
 {
     public class GetEventParticipants : IGetEventParticipants
@@ -18,7 +19,14 @@ namespace EventsService.Application.UseCases.ParticipantsUseCases
 
         public async Task<IEnumerable<ParticipantOfEventDto>?> ExecuteAsync(int eventId)
         {
-            var participants = await _unitOfWork.Participants.GetAsync(p => p.EventId == eventId);
+            var eventEntity = await _unitOfWork.Events.GetAll().Where(p => p.Id == eventId).FirstOrDefaultAsync();
+
+            if (eventEntity == null)
+            {
+                throw new NotFoundException("Event not found");
+            }
+
+            var participants = await _unitOfWork.Participants.GetAll().Where(p => p.EventId == eventId).ToListAsync();
             return _mapper.Map<IEnumerable<ParticipantOfEventDto>>(participants);
         }
     }

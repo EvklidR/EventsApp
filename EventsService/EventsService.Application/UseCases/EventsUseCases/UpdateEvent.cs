@@ -5,6 +5,7 @@ using AutoMapper;
 using EventsService.Application.Interfaces.EventsUseCases;
 using EventsService.Domain.Interfaces;
 using EventsService.Application.Exceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace EventsService.Application.UseCases.EventsUseCases
 {
@@ -12,22 +13,18 @@ namespace EventsService.Application.UseCases.EventsUseCases
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly IEmailSender _emailSender;
 
         public UpdateEvent(
             IUnitOfWork unitOfWork,
-            IMapper mapper,
-            IValidator<UpdateEventDto> validator,
-            IEmailSender emailSender)
+            IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _emailSender = emailSender;
         }
 
         public async Task ExecuteAsync(UpdateEventDto updateEventDto)
         {
-            var existingEvent = _unitOfWork.Events.GetAll().FirstOrDefault(e => e.Id == updateEventDto.Id);
+            var existingEvent = await _unitOfWork.Events.GetAll().FirstOrDefaultAsync(e => e.Id == updateEventDto.Id);
 
             if (existingEvent == null)
             {

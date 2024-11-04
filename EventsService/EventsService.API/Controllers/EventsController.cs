@@ -1,4 +1,5 @@
-﻿using EventsService.Application;
+﻿using EventsService.API.Filters;
+using EventsService.Application;
 using EventsService.Application.DTOs;
 using EventsService.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -26,39 +27,52 @@ public class EventsController : ControllerBase
     }
 
     [HttpGet("get-event-by-name/{name}")]
-    public IActionResult GetEventByName(string name)
+    public async Task<IActionResult> GetEventByName(string name)
     {
-        var eventDto = _eventsFacade.GetEventByName(name);
+        var eventDto = await _eventsFacade.GetEventByNameAsync(name);
         return Ok(eventDto);
     }
 
     [HttpGet("{id}")]
-    public ActionResult<EventDto> GetEventById(int id)
+    public async Task<ActionResult<EventDto>> GetEventById(int id)
     {
-        var eventDto = _eventsFacade.GetEventById(id);
+        var eventDto = await _eventsFacade.GetEventByIdAsync(id);
         return Ok(eventDto);
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<EventDto>> GetEvents([FromQuery] EventFilterDto filterDto)
+    public async Task<ActionResult<IEnumerable<EventDto>>> GetEvents([FromQuery] EventFilterDto filterDto)
     {
-        var events = _eventsFacade.GetFilteredEvents(filterDto);
+        var events = await _eventsFacade.GetFilteredEventsAsync(filterDto);
         return Ok(events);
+    }
+
+    [Authorize]
+    [HttpGet("user")]
+    [ServiceFilter(typeof(UserIdFilter))]
+    public async Task<ActionResult<IEnumerable<EventDto>>> GetUserEvents()
+    {
+        var userId = (int)HttpContext.Items["UserId"]!;
+
+        var userEvents = await _eventsFacade.GetUserEventsAsync(userId);
+        return Ok(userEvents);
     }
 
     [Authorize(Roles = "admin")]
     [HttpPost]
-    public async Task<IActionResult> CreateEvent([FromForm] CreateEventDto createEventDto, IFormFile imageFile)
+    [ServiceFilter(typeof(ValidateCreateEventDtoAttribute))]
+    public async Task<IActionResult> CreateEvent([FromForm] CreateEventDto createEventDto, IFormFile? imageFile)
     {
-        var createdEvent = await _eventsFacade.CreateEvent(createEventDto, imageFile);
+        var createdEvent = await _eventsFacade.CreateEventAsync(createEventDto, imageFile);
         return CreatedAtAction(nameof(GetEventById), new { id = createdEvent.Id }, createdEvent);
     }
 
     [Authorize(Roles = "admin")]
     [HttpPut]
+    [ServiceFilter(typeof(ValidateUpdateEventDtoAttribute))]
     public async Task<IActionResult> UpdateEvent(UpdateEventDto updateEventDto)
     {
-        await _eventsFacade.UpdateEvent(updateEventDto);
+        await _eventsFacade.UpdateEventAsync(updateEventDto);
         return NoContent();
     }
 
@@ -67,7 +81,7 @@ public class EventsController : ControllerBase
     public async Task<IActionResult> DeleteEvent(int id)
     {
 
-        await _eventsFacade.DeleteEvent(id);
+        await _eventsFacade.DeleteEventAsync(id);
         return NoContent();
 
     }

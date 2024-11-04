@@ -1,6 +1,7 @@
 using EventsService.Application.DependencyInjection;
 using EventsService.Infrastructure.DependencyInjection;
-using EventsService.Api.DependencyInjection;
+using EventsService.API.DependencyInjection;
+using EventsService.API.Middleware;
 
 namespace EventsService
 {
@@ -34,12 +35,6 @@ namespace EventsService
             app.UseAuthorization();
 
             app.MapControllers();
-
-            //app.UseStaticFiles(new StaticFileOptions
-            //{
-            //    FileProvider = new PhysicalFileProvider(imagePath),
-            //    RequestPath = "/images"
-            //});
 
             app.Run();
         }

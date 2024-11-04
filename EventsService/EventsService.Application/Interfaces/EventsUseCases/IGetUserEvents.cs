@@ -2,8 +2,8 @@
 
 namespace EventsService.Application.Interfaces.EventsUseCases
 {
-    public interface IGetEventById
+    public interface IGetUserEvents
     {
-        Task<EventDto> ExecuteAsync(int id);
+        Task<IEnumerable<EventDto>?> ExecuteAsync(int userId);
     }
 }

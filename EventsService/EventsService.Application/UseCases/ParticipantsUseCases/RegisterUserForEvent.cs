@@ -29,10 +29,10 @@ namespace EventsService.Application.UseCases.ParticipantsUseCases
                 throw new NotFoundException("Event not found");
             }
 
-            var isAlreadyRegistered = await _unitOfWork.Participants
-                .GetAsync(p => (p.UserId == profileDto.UserId && p.EventId == profileDto.EventId));
+            var isAlreadyRegistered = await _unitOfWork.Participants.GetAll()
+                .FirstOrDefaultAsync(p => (p.UserId == profileDto.UserId && p.EventId == profileDto.EventId));
 
-            if (isAlreadyRegistered.Any())
+            if (isAlreadyRegistered is not null)
             {
                 throw new BusinessLogicException("You are already registered");
             }

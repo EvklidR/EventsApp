@@ -18,6 +18,7 @@ namespace EventsService.Application
         private readonly IGetFilteredEvents _getFilteredEventsHandler;
         private readonly INotifyParticipants _notifyParticipantsHandler;
         private readonly IImageService _imageService;
+        private readonly IGetUserEvents _getUserEventsHandler;
 
         public EventsUseCasesFacade(
             IGetEventById getEventByIdHandler,
@@ -27,7 +28,8 @@ namespace EventsService.Application
             IDeleteEvent deleteEventHandler,
             IGetFilteredEvents getFilteredEventsHandler,
             INotifyParticipants notifyParticipantsHandler,
-            IImageService imageService)
+            IImageService imageService,
+            IGetUserEvents getUserEventsHandler)
         {
             _getEventByIdHandler = getEventByIdHandler;
             _getEventByNameHandler = getEventByNameHandler;
@@ -37,19 +39,25 @@ namespace EventsService.Application
             _getFilteredEventsHandler = getFilteredEventsHandler;
             _notifyParticipantsHandler = notifyParticipantsHandler;
             _imageService = imageService;
+            _getUserEventsHandler = getUserEventsHandler;
         }
 
-        public EventDto GetEventById(int id)
+        public async Task<EventDto> GetEventByIdAsync(int id)
         {
-            return _getEventByIdHandler.Execute(id);
+            return await _getEventByIdHandler.ExecuteAsync(id);
         }
 
-        public EventDto GetEventByName(string name)
+        public async Task<EventDto> GetEventByNameAsync(string name)
         {
-            return _getEventByNameHandler.Execute(name);
+            return await _getEventByNameHandler.ExecuteAsync(name);
         }
 
-        public async Task<EventDto> CreateEvent(CreateEventDto eventDto, IFormFile imageFile)
+        public async Task<IEnumerable<EventDto>?> GetUserEventsAsync(int userId)
+        {
+            return await _getUserEventsHandler.ExecuteAsync(userId);
+        }
+
+        public async Task<EventDto> CreateEventAsync(CreateEventDto eventDto, IFormFile? imageFile)
         {
             string? imageFileName = null;
 
@@ -61,9 +69,9 @@ namespace EventsService.Application
             return await _createEventHandler.ExecuteAsync(eventDto, imageFileName);
         }
 
-        public async Task UpdateEvent(UpdateEventDto updateEventDto)
+        public async Task UpdateEventAsync(UpdateEventDto updateEventDto)
         {
-            var existingEvent = _getEventByIdHandler.Execute(updateEventDto.Id);
+            var existingEvent = await _getEventByIdHandler.ExecuteAsync(updateEventDto.Id);
 
             await _updateEventHandler.ExecuteAsync(updateEventDto);
 
@@ -74,9 +82,9 @@ namespace EventsService.Application
             }
         }
 
-        public async Task DeleteEvent(int id)
+        public async Task DeleteEventAsync(int id)
         {
-            var eventEntity = _getEventByIdHandler.Execute(id);
+            var eventEntity = await _getEventByIdHandler.ExecuteAsync(id);
 
             await _deleteEventHandler.ExecuteAsync(id);
             
@@ -86,9 +94,9 @@ namespace EventsService.Application
             }
         }
 
-        public IEnumerable<EventDto>? GetFilteredEvents(EventFilterDto filterDto)
+        public async Task<IEnumerable<EventDto>?> GetFilteredEventsAsync(EventFilterDto filterDto)
         {
-            return _getFilteredEventsHandler.Execute(filterDto);
+            return await _getFilteredEventsHandler.ExecuteAsync(filterDto);
         }
     }
 }

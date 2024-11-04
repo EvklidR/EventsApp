@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using AuthorisationService.Application.Interfaces;
 using AuthorisationService.Application.Models;
 using Microsoft.AspNetCore.Authorization;
+using AuthorisationService.Application.Interfaces.UseCases;
+using System.Security.Claims;
 
 namespace AuthorisationService.Api.Controllers
 {
@@ -9,17 +10,19 @@ namespace AuthorisationService.Api.Controllers
     [ApiController]
     public class TokenController : ControllerBase
     {
-        private readonly IUserServiceFacade _userServiceFacade;
+        private readonly IRefreshToken _refreshToken;
+        private readonly IRevokeToken _revokeToken;
 
-        public TokenController(IUserServiceFacade userServiceFacade)
+        public TokenController(IRefreshToken refreshToken, IRevokeToken revokeToken)
         {
-            _userServiceFacade = userServiceFacade;
+            _refreshToken = refreshToken;
+            _revokeToken = revokeToken;
         }
 
         [HttpPost("refresh")]
         public async Task<IActionResult> Refresh(TokenApiModel tokenApiModel)
         {
-            var response = await _userServiceFacade.RefreshAccessTokenAsync(tokenApiModel);
+            var response = await _refreshToken.ExecuteAsync(tokenApiModel);
             return Ok(response);
         }
 
@@ -27,8 +30,10 @@ namespace AuthorisationService.Api.Controllers
         [Authorize]
         public async Task<IActionResult> Revoke()
         {
-            var username = User.Identity.Name;
-            await _userServiceFacade.RevokeTokenAsync(username);
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            int userId = int.Parse(userIdClaim.Value);
+
+            await _revokeToken.ExecuteAsync(userId);
             return NoContent();
         }
     }

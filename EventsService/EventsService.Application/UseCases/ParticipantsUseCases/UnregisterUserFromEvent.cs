@@ -1,6 +1,7 @@
 ﻿using EventsService.Application.Interfaces.ParticipantsUseCases;
 using EventsService.Domain.Interfaces;
 using EventsService.Application.Exceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace EventsService.Application.UseCases.ParticipantsUseCases
 {
@@ -15,17 +16,15 @@ namespace EventsService.Application.UseCases.ParticipantsUseCases
 
         public async Task ExecuteAsync(int eventId, int userId)
         {
-            var participant = await _unitOfWork.Participants
-                .GetAsync(p => (p.EventId == eventId && p.UserId == userId));
+            var participant = await _unitOfWork.Participants.GetAll()
+                .FirstOrDefaultAsync(p => (p.EventId == eventId && p.UserId == userId));
 
-            var singleParticipant = participant?.SingleOrDefault();
-
-            if (singleParticipant == null)
+            if (participant == null)
             {
                 throw new NotFoundException("Your registration not found");
             }
 
-            _unitOfWork.Participants.Delete(singleParticipant);
+            _unitOfWork.Participants.Delete(participant);
             await _unitOfWork.CompleteAsync();
         }
     }

@@ -3,6 +3,7 @@ using AuthorisationService.Application.Models;
 using AuthorisationService.Domain.Interfaces;
 using System.Security.Claims;
 using AuthorisationService.Application.Exceptions;
+using AuthorisationService.Application.Interfaces.UseCases;
 
 namespace AuthorisationService.Application.UseCases
 {
@@ -17,7 +18,7 @@ namespace AuthorisationService.Application.UseCases
             _tokenService = tokenService;
         }
 
-        public async Task<AuthenticatedResponse> AuthenticateAsync(LoginModel loginModel)
+        public async Task<AuthenticatedResponse> ExecuteAsync(LoginModel loginModel)
         {
             var user = await _userRepository.GetAsync(u => u.Login == loginModel.Username);
 

@@ -7,6 +7,7 @@ using AuthorisationService.Application.Models;
 using AuthorisationService.Domain.Entities;
 using System.Security.Claims;
 using AuthorisationService.Application.Exceptions;
+using AuthorisationService.Application.Interfaces.UseCases;
 
 namespace AuthorisationService.Application.UseCases
 {
@@ -25,7 +26,7 @@ namespace AuthorisationService.Application.UseCases
             _validator = validator;
         }
 
-        public async Task<AuthenticatedResponse> RegisterAsync(CreateUserDto createUserDto)
+        public async Task<AuthenticatedResponse> ExecuteAsync(CreateUserDto createUserDto)
         {
             var existingUser = await _userRepository.GetAsync(u => u.Login == createUserDto.Login || u.Email == createUserDto.Email);
             if (existingUser != null)

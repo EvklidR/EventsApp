@@ -1,5 +1,6 @@
 ﻿using EventsService.Application.DTOs;
 using EventsService.Application.Interfaces;
+using EventsService.Application.Interfaces.EventsUseCases;
 using EventsService.Application.Interfaces.ParticipantsUseCases;
 
 namespace EventsService.Application
@@ -8,20 +9,17 @@ namespace EventsService.Application
     {
         private readonly IRegisterUserForEvent _registerUserForEventHandler;
         private readonly IUnregisterUserFromEvent _unregisterUserFromEventHandler;
-        private readonly IGetUserEvents _getUserEventsHandler;
         private readonly IGetParticipantById _getParticipantByIdHandler;
         private readonly IGetEventParticipants _getEventParticipantsHandler;
 
         public ParticipantsUseCasesFacade(
             IRegisterUserForEvent registerUserForEvent,
             IUnregisterUserFromEvent unregisterUserFromEvent,
-            IGetUserEvents getUserEvents,
             IGetParticipantById getParticipantById,
             IGetEventParticipants getParticipantsByEventId)
         {
             _registerUserForEventHandler = registerUserForEvent;
             _unregisterUserFromEventHandler = unregisterUserFromEvent;
-            _getUserEventsHandler = getUserEvents;
             _getParticipantByIdHandler = getParticipantById;
             _getEventParticipantsHandler = getParticipantsByEventId;
         }
@@ -34,11 +32,6 @@ namespace EventsService.Application
         public async Task UnregisterUserFromEventAsync(int eventId, int userId)
         {
             await _unregisterUserFromEventHandler.ExecuteAsync(eventId, userId);
-        }
-
-        public IEnumerable<EventDto>? GetUserEvents(int userId)
-        {
-            return _getUserEventsHandler.Execute(userId);
         }
 
         public async Task<ParticipantOfEventDto> GetParticipantByIdAsync(int participantId)

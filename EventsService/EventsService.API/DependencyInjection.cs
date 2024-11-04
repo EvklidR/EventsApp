@@ -2,9 +2,10 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using EventsService.API.Filters;
 using Microsoft.Extensions.Configuration;
 
-namespace EventsService.Api.DependencyInjection
+namespace EventsService.API.DependencyInjection
 {
     public static class DependencyInjection
     {
@@ -50,6 +51,12 @@ namespace EventsService.Api.DependencyInjection
                     }
                 });
             });
+
+            services.AddScoped<ValidateCreateEventDtoAttribute>();
+            services.AddScoped<ValidateCreateProfileDtoAttribute>();
+            services.AddScoped<ValidateUpdateEventDtoAttribute>();
+            services.AddScoped<UserIdFilter>();
+
 
             services.AddAuthorization();
             services.AddAuthentication(options =>

@@ -3,6 +3,7 @@ using EventsService.Application.DTOs;
 using EventsService.Application.Exceptions;
 using EventsService.Application.Interfaces.ParticipantsUseCases;
 using EventsService.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace EventsService.Application.UseCases.ParticipantsUseCases
 {
@@ -19,7 +20,7 @@ namespace EventsService.Application.UseCases.ParticipantsUseCases
 
         public async Task<ParticipantOfEventDto> ExecuteAsync(int participantId)
         {
-            var participant = await _unitOfWork.Participants.GetAsync(p => p.Id == participantId);
+            var participant = await _unitOfWork.Participants.GetAll().FirstOrDefaultAsync(p => p.Id == participantId);
 
             if (participant == null)
             {

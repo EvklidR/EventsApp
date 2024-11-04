@@ -1,4 +1,5 @@
-﻿using AuthorisationService.Application.Interfaces;
+﻿using AuthorisationService.Application.Exceptions;
+using AuthorisationService.Application.Interfaces.UseCases;
 using AuthorisationService.Domain.Interfaces;
 
 namespace AuthorisationService.Application.UseCases
@@ -12,10 +13,10 @@ namespace AuthorisationService.Application.UseCases
             _userRepository = userRepository;
         }
 
-        public async Task RevokeAsync(string username)
+        public async Task ExecuteAsync(int id)
         {
-            var user = await _userRepository.GetAsync(u => u.Login == username);
-            if (user == null) throw new ArgumentException("User not found");
+            var user = await _userRepository.GetAsync(u => u.Id == id);
+            if (user == null) throw new BadAuthorisationException("User not found");
 
             user.RefreshToken = null;
             await _userRepository.CompleteAsync();

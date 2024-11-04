@@ -2,6 +2,7 @@
 using AuthorisationService.Domain.Interfaces;
 using AuthorisationService.Application.Models;
 using AuthorisationService.Application.Exceptions;
+using AuthorisationService.Application.Interfaces.UseCases;
 namespace AuthorisationService.Application.UseCases
 {
     public class RefreshToken : IRefreshToken
@@ -15,7 +16,7 @@ namespace AuthorisationService.Application.UseCases
             _tokenService = tokenService;
         }
 
-        public async Task<AuthenticatedResponse> RefreshAccessTokenAsync(TokenApiModel tokenApiModel)
+        public async Task<AuthenticatedResponse> ExecuteAsync(TokenApiModel tokenApiModel)
         {
             var principal = _tokenService.GetPrincipalFromExpiredToken(tokenApiModel.AccessToken);
             var username = principal.Identity?.Name;

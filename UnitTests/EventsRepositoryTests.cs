@@ -1,98 +1,61 @@
-﻿using System;
+﻿using EventsService.Domain.Entities;
+using EventsService.Infrastructure.MSSQL;
+using EventsService.Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Xunit;
-using Moq;
-using Microsoft.AspNetCore.Http;
-using EventsService.Domain.Entities;
-using EventsService.Infrastructure.Repositories;
-using EventsService.Infrastructure.MSSQL;
 
-namespace RepositoryUnitTests
+namespace EventsService.Tests.Repository
 {
-    public class EventsRepositoryTests
+    public class EventRepositoryTests : IDisposable
     {
-        private ApplicationDbContext GetInMemoryDbContext()
+        private readonly ApplicationDbContext _context;
+        private readonly EventRepository _repository;
+
+        public EventRepositoryTests()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
-            return new ApplicationDbContext(options);
+
+            _context = new ApplicationDbContext(options);
+            _repository = new EventRepository(_context);
         }
 
         [Fact]
-        public async Task AddAsync_ShouldAddEvent()
+        public async Task Add_Should_Add_Event_To_Database()
         {
-            // Arrange
-            var context = GetInMemoryDbContext();
-            var repository = new EventRepository(context, "testPath");
+            var newEvent = new Event { Name = "Test Event", Description = "Test Description", Location = "Test Location" };
 
-            var newEvent = new Event
-            {
-                Name = "Test Event",
-                Description = "Test Description",
-                DateTimeHolding = DateTime.Now,
-                Location = "Test Location",
-                MaxParticipants = 100,
-                ImageUrl = "default-image.jpg"
-            };
+            _repository.Add(newEvent);
+            await _context.SaveChangesAsync();
 
-            // Act
-            await repository.AddAsync(newEvent);
-            await context.SaveChangesAsync();
-
-            // Assert
-            var addedEvent = context.Events.FirstOrDefault(e => e.Name == "Test Event");
-            Assert.NotNull(addedEvent);
-            Assert.Equal("Test Event", addedEvent.Name);
-            Assert.Equal("Test Description", addedEvent.Description);
-            Assert.Equal("default-image.jpg", addedEvent.ImageUrl);
+            var eventInDb = await _context.Events.FindAsync(newEvent.Id);
+            Assert.NotNull(eventInDb);
+            Assert.Equal(newEvent.Name, eventInDb.Name);
         }
-
 
         [Fact]
-        public async Task GetAll_ShouldReturnAllEvents()
+        public void GetAll_Should_Return_All_Events()
         {
-            // Arrange
-            var context = GetInMemoryDbContext();
-            var repository = new EventRepository(context, "testPath");
+            var event1 = new Event { Name = "Event 1", Description = "Description 1", Location = "Location 1" };
+            var event2 = new Event { Name = "Event 2", Description = "Description 2", Location = "Location 2" };
+            _context.Events.AddRange(event1, event2);
+            _context.SaveChanges();
 
-            var event1 = new Event
-            {
-                Name = "Event 1",
-                Description = "Description 1",
-                DateTimeHolding = DateTime.Now.AddDays(1),
-                Location = "Location 1",
-                MaxParticipants = 50,
-                ImageUrl = "image1.jpg"
-            };
+            var result = _repository.GetAll().ToList();
 
-            var event2 = new Event
-            {
-                Name = "Event 2",
-                Description = "Description 2",
-                DateTimeHolding = DateTime.Now.AddDays(2),
-                Location = "Location 2",
-                MaxParticipants = 100,
-                ImageUrl = "image2.jpg"
-            };
-
-            await repository.AddAsync(event1);
-            await repository.AddAsync(event2);
-            await context.SaveChangesAsync();
-
-            // Act
-            var events = repository.GetAll().ToList();
-
-            // Assert
-            Assert.NotNull(events);
-            Assert.Equal(2, events.Count);
-            Assert.Equal("Event 1", events[0].Name);
-            Assert.Equal("Event 2", events[1].Name);
-            Assert.Equal("image1.jpg", events[0].ImageUrl);
-            Assert.Equal("image2.jpg", events[1].ImageUrl);
+            Assert.Equal(2, result.Count);
+            Assert.Contains(result, e => e.Name == event1.Name);
+            Assert.Contains(result, e => e.Name == event2.Name);
         }
 
+        public void Dispose()
+        {
+            _context.Database.EnsureDeleted();
+            _context.Dispose();
+        }
     }
 }

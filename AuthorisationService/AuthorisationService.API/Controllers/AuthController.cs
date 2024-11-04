@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using AuthorisationService.Application.Interfaces;
 using AuthorisationService.Application.Models;
 using AuthorisationService.Api.Filters;
 using AuthorisationService.Application.DTOs;
+using AuthorisationService.Application.Interfaces.UseCases;
 
 namespace AuthorisationService.Api.Controllers
 {
@@ -10,17 +10,19 @@ namespace AuthorisationService.Api.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IUserServiceFacade _userServiceFacade;
+        private readonly ILoginUser _loginUser;
+        private readonly IRegisterUser _registerUser;
 
-        public AuthController(IUserServiceFacade userServiceFacade)
+        public AuthController(ILoginUser loginUser, IRegisterUser registerUser)
         {
-            _userServiceFacade = userServiceFacade;
+            _loginUser = loginUser;
+            _registerUser = registerUser;
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginModel loginModel)
         {
-            var response = await _userServiceFacade.AuthenticateAsync(loginModel);
+            var response = await _loginUser.ExecuteAsync(loginModel);
             return Ok(response);
         }
 
@@ -29,7 +31,7 @@ namespace AuthorisationService.Api.Controllers
         [ServiceFilter(typeof(ValidateCreateUserDtoAttribute))]
         public async Task<IActionResult> Register([FromBody] CreateUserDto createUserDto)
         {
-            var response = await _userServiceFacade.RegisterAsync(createUserDto);
+            var response = await _registerUser.ExecuteAsync(createUserDto);
             return Ok(response);
         }
     }

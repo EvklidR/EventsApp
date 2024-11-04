@@ -3,6 +3,7 @@ using EventsService.Domain.Interfaces;
 using EventsService.Application.DTOs;
 using AutoMapper;
 using EventsService.Application.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace EventsService.Application.UseCases.ParticipantsUseCases
 {
@@ -19,7 +20,7 @@ namespace EventsService.Application.UseCases.ParticipantsUseCases
 
         public async Task ExecuteAsync(UpdateEventDto updateEventDto)
         {
-            var participants = await _unitOfWork.Participants.GetAsync(p => p.EventId == updateEventDto.Id);
+            var participants = await _unitOfWork.Participants.GetAll().Where(p => p.EventId == updateEventDto.Id).ToListAsync();
 
             if (participants != null)
             {
