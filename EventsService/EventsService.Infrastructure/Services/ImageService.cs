@@ -40,15 +40,18 @@ namespace EventsService.Infrastructure.Services
 
         }
 
+        public void DeleteImage(string fileName)
+        {
+            var filePath = Path.Combine(_imagePath, fileName);
+
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+        }
 
         public async Task<byte[]> GetImageAsync(string fileName)
         {
-            byte[] cachedFile = await _redisDb.StringGetAsync(fileName);
-            if (cachedFile != null && cachedFile.Length > 0)
-            {
-                return cachedFile;
-            }
-
             var filePath = Path.Combine(_imagePath, fileName);
 
             if (!File.Exists(filePath))
@@ -58,19 +61,22 @@ namespace EventsService.Infrastructure.Services
 
             byte[] fileBytes = await File.ReadAllBytesAsync(filePath);
 
-            await _redisDb.StringSetAsync(fileName, fileBytes, TimeSpan.FromMinutes(30));
-
             return fileBytes;
         }
 
-        public void DeleteImage(string fileName)
+        public async Task<byte[]> GetCashedImageAsync(string fileName)
         {
-            var filePath = Path.Combine(_imagePath, fileName);
-
-            if (File.Exists(filePath))
+            byte[] cachedFile = await _redisDb.StringGetAsync(fileName);
+            if (cachedFile != null && cachedFile.Length > 0)
             {
-                File.Delete(filePath);
+                return cachedFile;
             }
+
+            byte[] fileBytes = await GetImageAsync(fileName);
+
+            await _redisDb.StringSetAsync(fileName, fileBytes, TimeSpan.FromMinutes(30));
+
+            return fileBytes;
         }
     }
 }

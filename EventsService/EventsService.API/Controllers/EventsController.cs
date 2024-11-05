@@ -22,7 +22,7 @@ public class EventsController : ControllerBase
     [HttpGet("get-file/{fileName}")]
     public async Task<IActionResult> GetFile(string fileName)
     {
-        byte[] fileBytes = await _imageService.GetImageAsync(fileName);
+        byte[] fileBytes = await _imageService.GetCashedImageAsync(fileName);
         return File(fileBytes, "application/octet-stream", fileName);
     }
 
