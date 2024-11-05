@@ -49,7 +49,7 @@ Once the project is built, run the application locally:
 **bash**
 dotnet run
 
-The backend will be available at http://localhost:5000 (or another port, depending on your configuration).
+The backend will be available at http://localhost:4000 (or another port, depending on your configuration).
 
 ## Contacts
 
