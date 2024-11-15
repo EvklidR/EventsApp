@@ -16,9 +16,17 @@ namespace AuthorisationService.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<User?> GetAsync(Expression<Func<User, bool>> predicate)
+        public async Task<User?> GetByIdAsync(int id)
         {
-            return await _context.Users.FirstOrDefaultAsync(predicate);
+            return await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+        }
+        public async Task<User?> GetByLoginAsync(string login)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Login == login);
+        }
+        public async Task<User?> GetByEmailAsync(string email)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
 
         public void AddUser(User user)

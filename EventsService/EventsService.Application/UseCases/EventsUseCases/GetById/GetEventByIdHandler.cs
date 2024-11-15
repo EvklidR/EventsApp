@@ -1,26 +1,25 @@
-﻿using EventsService.Application.DTOs;
-using EventsService.Application.Exceptions;
-using AutoMapper;
-using EventsService.Application.Interfaces.EventsUseCases;
+﻿using MediatR;
+using EventsService.Application.DTOs;
 using EventsService.Domain.Interfaces;
-using Microsoft.EntityFrameworkCore;
+using AutoMapper;
+using EventsService.Application.Exceptions;
 
 namespace EventsService.Application.UseCases.EventsUseCases
 {
-    public class GetEventById : IGetEventById
+    public class GetEventByIdHandler : IRequestHandler<GetEventByIdCommand, EventDto>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public GetEventById(IUnitOfWork unitOfWork, IMapper mapper)
+        public GetEventByIdHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
-        public async Task<EventDto> ExecuteAsync(int id)
+        public async Task<EventDto> Handle(GetEventByIdCommand request, CancellationToken cancellationToken)
         {
-            var eventEntity = await _unitOfWork.Events.GetAll().FirstOrDefaultAsync(e => e.Id == id);
+            var eventEntity = await _unitOfWork.Events.GetByIdAsync(request.Id);
 
             if (eventEntity == null)
             {

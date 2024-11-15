@@ -15,6 +15,7 @@ namespace AuthorisationService.Application.DependencyInjection
 
             services.AddScoped<ILoginUser, LoginUser>();
             services.AddScoped<IRegisterUser, RegisterUser>();
+            services.AddScoped<ICheckUserById, CheckUserById>();
             services.AddScoped<IRefreshToken, RefreshToken>();
             services.AddScoped<IRevokeToken, RevokeToken>();
 

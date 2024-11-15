@@ -30,9 +30,20 @@ namespace EventsService.Infrastructure.Repositories
             _context.Events.Remove(eventToDelete);
         }
 
-        public IQueryable<Event> GetAll()
+        public async Task<IEnumerable<Event>> GetAllAsync()
         {
-            return _context.Events.Include(e => e.Participants).AsQueryable();
+            return await _context.Events.ToListAsync();
         }
+
+        public async Task<Event?> GetByIdAsync(int id)
+        {
+            return await _context.Events.FirstOrDefaultAsync(e => e.Id == id);
+        }
+
+        public async Task<Event?> GetByNameAsync(string name)
+        {
+            return await _context.Events.FirstOrDefaultAsync(e => e.Name == name);
+        }
+
     }
 }

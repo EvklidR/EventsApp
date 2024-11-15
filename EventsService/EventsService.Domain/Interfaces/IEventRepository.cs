@@ -3,12 +3,8 @@ using Microsoft.AspNetCore.Http;
 
 namespace EventsService.Domain.Interfaces
 {
-    public interface IEventRepository
+    public interface IEventRepository : IBaseRepository<Event>
     {
-        IQueryable<Event> GetAll();
-        void Add(Event newEvent);
-        void Update(Event updatedEvent);
-        void Delete(Event eventToDelete);
-
+        Task<Event?> GetByNameAsync(string name);
     }
 }

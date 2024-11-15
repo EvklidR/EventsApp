@@ -1,6 +1,5 @@
 ﻿using EventsService.Application.DTOs;
 using EventsService.Application.Interfaces;
-using EventsService.Application.Interfaces.EventsUseCases;
 using EventsService.Application.Interfaces.ParticipantsUseCases;
 
 namespace EventsService.Application

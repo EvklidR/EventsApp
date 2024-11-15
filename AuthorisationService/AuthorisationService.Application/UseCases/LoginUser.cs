@@ -20,7 +20,7 @@ namespace AuthorisationService.Application.UseCases
 
         public async Task<AuthenticatedResponse> ExecuteAsync(LoginModel loginModel)
         {
-            var user = await _userRepository.GetAsync(u => u.Login == loginModel.Username);
+            var user = await _userRepository.GetByLoginAsync(loginModel.Username);
 
             if (user == null)
             { 

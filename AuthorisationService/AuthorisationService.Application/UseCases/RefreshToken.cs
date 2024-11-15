@@ -3,6 +3,7 @@ using AuthorisationService.Domain.Interfaces;
 using AuthorisationService.Application.Models;
 using AuthorisationService.Application.Exceptions;
 using AuthorisationService.Application.Interfaces.UseCases;
+
 namespace AuthorisationService.Application.UseCases
 {
     public class RefreshToken : IRefreshToken
@@ -20,7 +21,13 @@ namespace AuthorisationService.Application.UseCases
         {
             var principal = _tokenService.GetPrincipalFromExpiredToken(tokenApiModel.AccessToken);
             var username = principal.Identity?.Name;
-            var user = await _userRepository.GetAsync(u => u.Login == username);
+
+            if (username == null) 
+            {
+                throw new BadAuthorisationException("AccessToken isn't valid");
+            }
+
+            var user = await _userRepository.GetByLoginAsync(username!);
 
             if (user == null)
             {

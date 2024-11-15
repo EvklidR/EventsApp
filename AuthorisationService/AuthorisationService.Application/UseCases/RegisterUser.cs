@@ -28,16 +28,21 @@ namespace AuthorisationService.Application.UseCases
 
         public async Task<AuthenticatedResponse> ExecuteAsync(CreateUserDto createUserDto)
         {
-            var existingUser = await _userRepository.GetAsync(u => u.Login == createUserDto.Login || u.Email == createUserDto.Email);
+            var existingUser = await _userRepository.GetByEmailAsync(createUserDto.Email);
+
             if (existingUser != null)
             {
-                throw new AlreadyExistsException("A user with the same login or email already exists.");
+                throw new AlreadyExistsException("A user with the same email already exists.");
+            }
+
+            existingUser = await _userRepository.GetByLoginAsync(createUserDto.Login);
+
+            if (existingUser != null)
+            {
+                throw new AlreadyExistsException("A user with the same login already exists.");
             }
 
             var user = _mapper.Map<User>(createUserDto);
-
-            _userRepository.AddUser(user);
-            await _userRepository.CompleteAsync();
 
             var claims = new List<Claim>
             {
@@ -51,7 +56,7 @@ namespace AuthorisationService.Application.UseCases
             user.RefreshToken = refreshToken;
             user.RefreshTokenExpiryTime = DateTime.Now.AddDays(10);
 
-            _userRepository.UpdateUser(user);
+            _userRepository.AddUser(user);
             await _userRepository.CompleteAsync();
 
             return new AuthenticatedResponse

@@ -1,88 +1,95 @@
 ﻿using EventsService.API.Filters;
-using EventsService.Application;
 using EventsService.Application.DTOs;
-using EventsService.Application.Interfaces;
+using EventsService.Application.UseCases.EventsUseCases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MediatR;
+using EventsService.Application.Interfaces;
 
-
-[Route("api/[controller]")]
-[ApiController]
-public class EventsController : ControllerBase
+namespace EventsService.API.Controllers
 {
-    private readonly EventsUseCasesFacade _eventsFacade;
-    private readonly IImageService _imageService;
-
-    public EventsController(EventsUseCasesFacade eventsUseCasesFacade, IImageService imageService)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class EventsController : ControllerBase
     {
-        _eventsFacade = eventsUseCasesFacade;
-        _imageService = imageService;
-    }
+        private readonly IMediator _mediator;
+        private readonly IImageService _imageService;
 
-    [HttpGet("get-file/{fileName}")]
-    public async Task<IActionResult> GetFile(string fileName)
-    {
-        byte[] fileBytes = await _imageService.GetCashedImageAsync(fileName);
-        return File(fileBytes, "application/octet-stream", fileName);
-    }
+        public EventsController(IMediator mediator, IImageService imageService)
+        {
+            _mediator = mediator;
+            _imageService = imageService;
+        }
 
-    [HttpGet("get-event-by-name/{name}")]
-    public async Task<IActionResult> GetEventByName(string name)
-    {
-        var eventDto = await _eventsFacade.GetEventByNameAsync(name);
-        return Ok(eventDto);
-    }
+        [HttpGet("get-file/{fileName}")]
+        public async Task<IActionResult> GetFile(string fileName)
+        {
+            byte[] fileBytes = await _imageService.GetCashedImageAsync(fileName);
+            return File(fileBytes, "application/octet-stream", fileName);
+        }
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<EventDto>> GetEventById(int id)
-    {
-        var eventDto = await _eventsFacade.GetEventByIdAsync(id);
-        return Ok(eventDto);
-    }
+        [HttpGet("get-event-by-name/{name}")]
+        public async Task<IActionResult> GetEventByName(string name)
+        {
+            var query = new GetEventByNameCommand(name);
+            var eventDto = await _mediator.Send(query);
+            return Ok(eventDto);
+        }
 
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<EventDto>>> GetEvents([FromQuery] EventFilterDto filterDto)
-    {
-        var events = await _eventsFacade.GetFilteredEventsAsync(filterDto);
-        return Ok(events);
-    }
+        [HttpGet("{id}")]
+        public async Task<ActionResult<EventDto>> GetEventById(int id)
+        {
+            var query = new GetEventByIdCommand(id);
+            var eventDto = await _mediator.Send(query);
+            return Ok(eventDto);
+        }
 
-    [Authorize]
-    [HttpGet("user")]
-    [ServiceFilter(typeof(UserIdFilter))]
-    public async Task<ActionResult<IEnumerable<EventDto>>> GetUserEvents()
-    {
-        var userId = (int)HttpContext.Items["UserId"]!;
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<EventDto>>> GetEvents([FromQuery] EventFilterDto filterDto)
+        {
+            var query = new GetFilteredEventsCommand(filterDto);
+            var events = await _mediator.Send(query);
+            return Ok(events);
+        }
 
-        var userEvents = await _eventsFacade.GetUserEventsAsync(userId);
-        return Ok(userEvents);
-    }
+        [Authorize]
+        [HttpGet("user")]
+        [ServiceFilter(typeof(UserIdFilter))]
+        public async Task<ActionResult<IEnumerable<EventDto>>> GetUserEvents()
+        {
+            var userId = (int)HttpContext.Items["UserId"]!;
+            var query = new GetUserEventsCommand(userId);
+            var userEvents = await _mediator.Send(query);
+            return Ok(userEvents);
+        }
 
-    [Authorize(Roles = "admin")]
-    [HttpPost]
-    [ServiceFilter(typeof(ValidateCreateEventDtoAttribute))]
-    public async Task<IActionResult> CreateEvent([FromForm] CreateEventDto createEventDto, IFormFile? imageFile)
-    {
-        var createdEvent = await _eventsFacade.CreateEventAsync(createEventDto, imageFile);
-        return CreatedAtAction(nameof(GetEventById), new { id = createdEvent.Id }, createdEvent);
-    }
+        [Authorize(Roles = "admin")]
+        [HttpPost]
+        [ServiceFilter(typeof(ValidateCreateEventDtoAttribute))]
+        public async Task<IActionResult> CreateEvent([FromForm] CreateEventDto createEventDto, IFormFile? imageFile)
+        {
+            var command = new CreateEventCommand(createEventDto, imageFile?.FileName);
+            var createdEvent = await _mediator.Send(command);
+            return CreatedAtAction(nameof(GetEventById), new { id = createdEvent.Id }, createdEvent);
+        }
 
-    [Authorize(Roles = "admin")]
-    [HttpPut]
-    [ServiceFilter(typeof(ValidateUpdateEventDtoAttribute))]
-    public async Task<IActionResult> UpdateEvent(UpdateEventDto updateEventDto)
-    {
-        await _eventsFacade.UpdateEventAsync(updateEventDto);
-        return NoContent();
-    }
+        [Authorize(Roles = "admin")]
+        [HttpPut]
+        [ServiceFilter(typeof(ValidateUpdateEventDtoAttribute))]
+        public async Task<IActionResult> UpdateEvent(UpdateEventDto updateEventDto)
+        {
+            var command = new UpdateEventCommand(updateEventDto);
+            await _mediator.Send(command);
+            return NoContent();
+        }
 
-    [Authorize(Roles = "admin")]
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteEvent(int id)
-    {
-
-        await _eventsFacade.DeleteEventAsync(id);
-        return NoContent();
-
+        [Authorize(Roles = "admin")]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteEvent(int id)
+        {
+            var command = new DeleteEventCommand(id);
+            await _mediator.Send(command);
+            return NoContent();
+        }
     }
 }

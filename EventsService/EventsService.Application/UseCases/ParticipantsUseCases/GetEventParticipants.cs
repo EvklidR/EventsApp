@@ -19,14 +19,17 @@ namespace EventsService.Application.UseCases.ParticipantsUseCases
 
         public async Task<IEnumerable<ParticipantOfEventDto>?> ExecuteAsync(int eventId)
         {
-            var eventEntity = await _unitOfWork.Events.GetAll().Where(p => p.Id == eventId).FirstOrDefaultAsync();
+            var eventEntity = await _unitOfWork.Events.GetByIdAsync(eventId);
 
             if (eventEntity == null)
             {
                 throw new NotFoundException("Event not found");
             }
 
-            var participants = await _unitOfWork.Participants.GetAll().Where(p => p.EventId == eventId).ToListAsync();
+            var participants = await _unitOfWork.Participants.GetAllAsync();
+                
+            participants = participants.Where(p => p.EventId == eventId).ToList();
+
             return _mapper.Map<IEnumerable<ParticipantOfEventDto>>(participants);
         }
     }

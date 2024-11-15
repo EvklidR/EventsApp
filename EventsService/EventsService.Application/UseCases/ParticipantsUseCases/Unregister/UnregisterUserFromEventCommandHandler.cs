@@ -1,24 +1,25 @@
-﻿using EventsService.Application.Interfaces.ParticipantsUseCases;
-using EventsService.Domain.Interfaces;
+﻿using MediatR;
 using EventsService.Application.Exceptions;
-using Microsoft.EntityFrameworkCore;
+using EventsService.Domain.Interfaces;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace EventsService.Application.UseCases.ParticipantsUseCases
 {
-    public class UnregisterUserFromEvent : IUnregisterUserFromEvent
+    public class UnregisterUserFromEventCommandHandler : IRequestHandler<UnregisterUserFromEventCommand>
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public UnregisterUserFromEvent(IUnitOfWork unitOfWork)
+        public UnregisterUserFromEventCommandHandler(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
-        public async Task ExecuteAsync(int eventId, int userId)
+        public async Task Handle(UnregisterUserFromEventCommand request, CancellationToken cancellationToken)
         {
             var participants = await _unitOfWork.Participants.GetAllAsync();
 
-            var participant = participants.FirstOrDefault(p => (p.EventId == eventId && p.UserId == userId));
+            var participant = participants.FirstOrDefault(p => p.EventId == request.EventId && p.UserId == request.UserId);
 
             if (participant == null)
             {

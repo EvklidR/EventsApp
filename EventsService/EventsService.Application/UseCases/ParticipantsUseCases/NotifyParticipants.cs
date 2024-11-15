@@ -20,7 +20,8 @@ namespace EventsService.Application.UseCases.ParticipantsUseCases
 
         public async Task ExecuteAsync(UpdateEventDto updateEventDto)
         {
-            var participants = await _unitOfWork.Participants.GetAll().Where(p => p.EventId == updateEventDto.Id).ToListAsync();
+            var participants = await _unitOfWork.Participants.GetAllAsync();
+            participants = participants.Where(p => p.EventId == updateEventDto.Id).ToList();
 
             if (participants != null)
             {

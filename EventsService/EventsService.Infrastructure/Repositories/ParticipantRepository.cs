@@ -1,6 +1,7 @@
 ﻿using EventsService.Domain.Entities;
 using EventsService.Domain.Interfaces;
 using EventsService.Infrastructure.MSSQL;
+using Microsoft.EntityFrameworkCore;
 
 namespace EventsService.Infrastructure.Repositories
 {
@@ -22,11 +23,21 @@ namespace EventsService.Infrastructure.Repositories
         {
             _context.Participants.Remove(participantToDelete);
         }
-
-        public IQueryable<ParticipantOfEvent> GetAll()
+        public void Update(ParticipantOfEvent updatedParticipant)
         {
-            return _context.Participants.AsQueryable();
+            _context.Participants.Update(updatedParticipant);
         }
+
+        public async Task<IEnumerable<ParticipantOfEvent>> GetAllAsync()
+        {
+            return await _context.Participants.ToListAsync();
+        }
+
+        public async Task<ParticipantOfEvent?> GetByIdAsync(int id)
+        {
+            return await _context.Participants.FirstOrDefaultAsync(p => p.Id == id);
+        }
+
 
     }
 }

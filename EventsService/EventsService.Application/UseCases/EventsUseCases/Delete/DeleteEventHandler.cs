@@ -1,24 +1,21 @@
-﻿using EventsService.Application.Exceptions;
-using EventsService.Application.Interfaces.EventsUseCases;
+﻿using MediatR;
 using EventsService.Domain.Interfaces;
-using Microsoft.EntityFrameworkCore;
+using EventsService.Application.Exceptions;
 
 namespace EventsService.Application.UseCases.EventsUseCases
 {
-    public class DeleteEvent : IDeleteEvent
+    public class DeleteEventHandler : IRequestHandler<DeleteEventCommand>
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public DeleteEvent(IUnitOfWork unitOfWork)
+        public DeleteEventHandler(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
-        public async Task ExecuteAsync(int id)
+        public async Task Handle(DeleteEventCommand request, CancellationToken cancellationToken)
         {
-            var eventEntitys = _unitOfWork.Events.GetAll();
-                
-            var eventEntity = await eventEntitys.FirstOrDefaultAsync(e => e.Id == id);
+            var eventEntity = await _unitOfWork.Events.GetByIdAsync(request.Id);
 
             if (eventEntity == null)
             {
@@ -27,6 +24,7 @@ namespace EventsService.Application.UseCases.EventsUseCases
 
             _unitOfWork.Events.Delete(eventEntity);
             await _unitOfWork.CompleteAsync();
+
         }
     }
 }

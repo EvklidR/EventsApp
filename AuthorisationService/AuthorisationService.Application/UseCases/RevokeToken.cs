@@ -15,7 +15,7 @@ namespace AuthorisationService.Application.UseCases
 
         public async Task ExecuteAsync(int id)
         {
-            var user = await _userRepository.GetAsync(u => u.Id == id);
+            var user = await _userRepository.GetByIdAsync(id);
             if (user == null) throw new BadAuthorisationException("User not found");
 
             user.RefreshToken = null;

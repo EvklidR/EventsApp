@@ -19,7 +19,7 @@ namespace EventsApp.AuthorisationService
 
             var app = builder.Build();
             app.UseCors("AllowSpecificOrigin");
-            app.UseMiddleware<ExceptionHandlingMiddleware>();
+            //app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             if (app.Environment.IsDevelopment())
             {
