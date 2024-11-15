@@ -45,12 +45,24 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    this.userRoleSubject.next(null);
-    this.isAuthorizedSubject.next(false);
-    this.router.navigate(['/login']);
+    this.http.post<void>(`${this.apiUrl}/Token/revoke`, {}).pipe(
+      tap(() => {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        this.userRoleSubject.next(null);
+        this.isAuthorizedSubject.next(false);
+        this.router.navigate(['/login']);
+      })
+    ).subscribe({
+      next: () => {
+        console.log('Logout successful');
+      },
+      error: (error) => {
+        console.error('Error during logout:', error);
+      }
+    });
   }
+
 
   refreshToken(): Observable<AuthenticatedResponse> {
     const refreshToken = localStorage.getItem('refreshToken');

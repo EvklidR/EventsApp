@@ -37,7 +37,7 @@ namespace AuthorisationService.Api.Controllers
             return Ok(response);
         }
 
-        [HttpPost("check_user_by_id/{id}")]
+        [HttpGet("check_user_by_id/{id}")]
         public async Task<IActionResult> Check(int id)
         {
             var response = await _checkUserById.ExecuteAsync(id);
