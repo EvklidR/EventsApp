@@ -68,7 +68,7 @@ namespace EventsService.API.Controllers
         [ServiceFilter(typeof(ValidateCreateEventDtoAttribute))]
         public async Task<IActionResult> CreateEvent([FromForm] CreateEventDto createEventDto, IFormFile? imageFile)
         {
-            var command = new CreateEventCommand(createEventDto, imageFile?.FileName);
+            var command = new CreateEventCommand(createEventDto, imageFile);
             var createdEvent = await _mediator.Send(command);
             return CreatedAtAction(nameof(GetEventById), new { id = createdEvent.Id }, createdEvent);
         }

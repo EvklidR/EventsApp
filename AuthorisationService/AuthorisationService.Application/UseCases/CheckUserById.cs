@@ -1,6 +1,4 @@
-﻿
-
-using AuthorisationService.Application.Interfaces;
+﻿using AuthorisationService.Application.Interfaces;
 using AuthorisationService.Application.Interfaces.UseCases;
 using AuthorisationService.Application.Models;
 using AuthorisationService.Domain.Interfaces;

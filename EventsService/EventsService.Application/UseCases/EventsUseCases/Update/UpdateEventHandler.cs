@@ -1,11 +1,8 @@
 ﻿using MediatR;
-using EventsService.Application.DTOs;
-using EventsService.Domain.Entities;
 using EventsService.Domain.Interfaces;
 using AutoMapper;
 using EventsService.Application.Exceptions;
-using System.Threading.Tasks;
-using System.Threading;
+using EventsService.Application.UseCases.ParticipantsUseCases;
 
 namespace EventsService.Application.UseCases.EventsUseCases
 {
@@ -13,11 +10,13 @@ namespace EventsService.Application.UseCases.EventsUseCases
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IMediator _mediator;
 
-        public UpdateEventHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public UpdateEventHandler(IUnitOfWork unitOfWork, IMapper mapper, IMediator mediator)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _mediator = mediator;
         }
 
         public async Task Handle(UpdateEventCommand request, CancellationToken cancellationToken)
@@ -29,8 +28,17 @@ namespace EventsService.Application.UseCases.EventsUseCases
                 throw new NotFoundException("Event not found");
             }
 
+            bool shouldNotifyParticipants = existingEvent.Location != request.UpdateEventDto.Location ||
+                                            existingEvent.DateTimeHolding != request.UpdateEventDto.DateTimeHolding;
+
             _mapper.Map(request.UpdateEventDto, existingEvent);
             await _unitOfWork.CompleteAsync();
+
+            if (shouldNotifyParticipants)
+            {
+                var notifyCommand = new NotifyParticipantsCommand(request.UpdateEventDto);
+                await _mediator.Send(notifyCommand, cancellationToken);
+            }
         }
     }
 }

@@ -1,16 +1,19 @@
 ﻿using MediatR;
 using EventsService.Domain.Interfaces;
 using EventsService.Application.Exceptions;
+using EventsService.Application.Interfaces;
 
 namespace EventsService.Application.UseCases.EventsUseCases
 {
     public class DeleteEventHandler : IRequestHandler<DeleteEventCommand>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IImageService _imageService;
 
-        public DeleteEventHandler(IUnitOfWork unitOfWork)
+        public DeleteEventHandler(IUnitOfWork unitOfWork, IImageService imageService)
         {
             _unitOfWork = unitOfWork;
+            _imageService = imageService;
         }
 
         public async Task Handle(DeleteEventCommand request, CancellationToken cancellationToken)
@@ -22,9 +25,13 @@ namespace EventsService.Application.UseCases.EventsUseCases
                 throw new NotFoundException("Event not found");
             }
 
+            if (!string.IsNullOrEmpty(eventEntity.ImageUrl))
+            {
+                _imageService.DeleteImage(eventEntity.ImageUrl);
+            }
+
             _unitOfWork.Events.Delete(eventEntity);
             await _unitOfWork.CompleteAsync();
-
         }
     }
 }

@@ -32,17 +32,17 @@ namespace EventsService.Infrastructure.Repositories
 
         public async Task<IEnumerable<Event>> GetAllAsync()
         {
-            return await _context.Events.ToListAsync();
+            return await _context.Events.Include(e => e.Participants).ToListAsync();
         }
 
         public async Task<Event?> GetByIdAsync(int id)
         {
-            return await _context.Events.FirstOrDefaultAsync(e => e.Id == id);
+            return await _context.Events.Include(e => e.Participants).FirstOrDefaultAsync(e => e.Id == id);
         }
 
         public async Task<Event?> GetByNameAsync(string name)
         {
-            return await _context.Events.FirstOrDefaultAsync(e => e.Name == name);
+            return await _context.Events.Include(e => e.Participants).FirstOrDefaultAsync(e => e.Name == name);
         }
 
     }
