@@ -9,8 +9,6 @@ namespace EventsService.Application.DependencyInjection
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-
-
             services.AddValidatorsFromAssemblyContaining<CreateEventDtoValidator>();
             services.AddValidatorsFromAssemblyContaining<CreateProfileDtoValidator>();
             services.AddValidatorsFromAssemblyContaining<UpdateEventDtoValidator>();

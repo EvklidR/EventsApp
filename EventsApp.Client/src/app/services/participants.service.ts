@@ -8,23 +8,19 @@ import { Event } from '../models/event.model';
   providedIn: 'root'
 })
 export class ParticipantsService {
-  private apiUrl = 'https://localhost:7068/events/api/Participants';
+  private apiUrl = 'https://localhost:7068/events/Participants';
 
   constructor(private http: HttpClient) { }
 
   registerUser(profile: CreateProfileDto): Observable<void> {
-    return this.http.post<void>(this.apiUrl, profile);
+    return this.http.post<void>(`${this.apiUrl}/register`, profile);
   }
 
   unregisterUser(eventId: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${eventId}`);
+    return this.http.delete<void>(`${this.apiUrl}/unregister/${eventId}`);
   }
 
-  getUserEvents(): Observable<Event[]> {
-    return this.http.get<Event[]>(`${this.apiUrl}/user`);
-  }
-
-  getParticipantsByEventId(eventId: number): Observable<ParticipantOfEventDto[]> {
-    return this.http.get<ParticipantOfEventDto[]>(`${this.apiUrl}/event/${eventId}`);
+  getEventParticipants(eventId: number): Observable<ParticipantOfEventDto[]> {
+    return this.http.get<ParticipantOfEventDto[]>(`${this.apiUrl}/get-event-partisipants/${eventId}`);
   }
 }

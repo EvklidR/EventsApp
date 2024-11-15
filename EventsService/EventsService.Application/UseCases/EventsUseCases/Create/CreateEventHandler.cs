@@ -4,7 +4,6 @@ using EventsService.Domain.Entities;
 using EventsService.Domain.Interfaces;
 using AutoMapper;
 using EventsService.Application.Exceptions;
-using Microsoft.AspNetCore.Http;
 using EventsService.Application.Interfaces;
 
 namespace EventsService.Application.UseCases.EventsUseCases
@@ -27,7 +26,7 @@ namespace EventsService.Application.UseCases.EventsUseCases
             var existingEvent = await _unitOfWork.Events.GetByNameAsync(request.EventDto.Name);
             if (existingEvent != null)
             {
-                throw new AlreadyExistsException("Event with this name already exists");
+                throw new BusinessLogicException("Event with this name already exists");
             }
 
             string? imageUrl = null;

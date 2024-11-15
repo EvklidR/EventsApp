@@ -21,7 +21,7 @@ export class MyEventsComponent implements OnInit {
   }
 
   loadUserEvents() {
-    this.participantsService.getUserEvents().subscribe(
+    this.eventsService.getUserEvents().subscribe(
       (events: Event[]) => {
         this.myEvents = events;
       },

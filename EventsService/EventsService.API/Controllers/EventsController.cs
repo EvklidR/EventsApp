@@ -8,7 +8,7 @@ using EventsService.Application.Interfaces;
 
 namespace EventsService.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class EventsController : ControllerBase
     {
@@ -53,7 +53,7 @@ namespace EventsService.API.Controllers
         }
 
         [Authorize]
-        [HttpGet("user")]
+        [HttpGet("user-events")]
         [ServiceFilter(typeof(UserIdFilter))]
         public async Task<ActionResult<IEnumerable<EventDto>>> GetUserEvents()
         {

@@ -7,7 +7,7 @@ import { Event, CreateEventDto, EventFilterDto } from '../models/event.model';
   providedIn: 'root'
 })
 export class EventsService {
-  private apiUrl = 'https://localhost:7068/events/api/Events';
+  private apiUrl = 'https://localhost:7068/events/Events';
 
   constructor(private http: HttpClient) { }
 
@@ -35,6 +35,10 @@ export class EventsService {
 
   getEventById(id: number): Observable<Event> {
     return this.http.get<Event>(`${this.apiUrl}/${id}`);
+  }
+
+  getUserEvents(): Observable<Event[]> {
+    return this.http.get<Event[]>(`${this.apiUrl}/user-events`);
   }
 
   getEventImage(fileName: string): Observable<Blob> {

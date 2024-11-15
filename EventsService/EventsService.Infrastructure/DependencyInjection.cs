@@ -23,6 +23,8 @@ namespace EventsService.Infrastructure.DependencyInjection
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<IUserService, UserService>();
+
 
             var imagePath = Path.Combine(Directory.GetCurrentDirectory(), configuration["ImageSettings:ImagePath"]);
             if (!Directory.Exists(imagePath))

@@ -40,6 +40,10 @@ namespace EventsService.API.Middleware
                     statusCode = HttpStatusCode.Conflict;
                     result = businessLogicEx.Message;
                     break;
+                case BadAuthorisationException badAuthEx:
+                    statusCode = HttpStatusCode.Unauthorized;
+                    result = badAuthEx.Message;
+                    break;
                 default:
                     statusCode = HttpStatusCode.InternalServerError;
                     result = "An unexpected error occurred.";

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using EventsService.Domain.Entities;
+using EventsService.Infrastructure.MSSQL.Configurations;
 
 namespace EventsService.Infrastructure.MSSQL
 {
@@ -15,21 +16,8 @@ namespace EventsService.Infrastructure.MSSQL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ParticipantOfEvent>()
-                .HasKey(p => p.Id);
-
-            modelBuilder.Entity<ParticipantOfEvent>()
-                .HasIndex(p => new { p.EventId, p.UserId })
-                .IsUnique();
-
-            modelBuilder.Entity<ParticipantOfEvent>()
-                .HasOne<Event>()
-                .WithMany(e => e.Participants)
-                .HasForeignKey(p => p.EventId);
-
-            modelBuilder.Entity<Event>()
-                .HasIndex(e => e.Name)
-                .IsUnique();
+            modelBuilder.ApplyConfiguration(new ParticipantOfEventConfiguration());
+            modelBuilder.ApplyConfiguration(new EventConfiguration());
         }
     }
 }

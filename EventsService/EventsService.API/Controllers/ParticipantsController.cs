@@ -7,7 +7,7 @@ using EventsService.API.Filters;
 
 namespace EventsService.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class ParticipantsController : ControllerBase
     {
@@ -19,7 +19,7 @@ namespace EventsService.API.Controllers
         }
 
         [Authorize]
-        [HttpPost]
+        [HttpPost("register")]
         [ServiceFilter(typeof(UserIdFilter))]
         [ServiceFilter(typeof(ValidateCreateProfileDtoAttribute))]
         public async Task<IActionResult> RegisterUser(CreateProfileDto profile)
@@ -34,7 +34,7 @@ namespace EventsService.API.Controllers
         }
 
         [Authorize]
-        [HttpDelete("{eventId}")]
+        [HttpDelete("unregister/{eventId}")]
         [ServiceFilter(typeof(UserIdFilter))]
         public async Task<IActionResult> UnregisterUser(int eventId)
         {
@@ -46,7 +46,7 @@ namespace EventsService.API.Controllers
             return NoContent();
         }
 
-        [HttpGet("participant/{participantId}")]
+        [HttpGet("get-participant-by-id/{participantId}")]
         public async Task<ActionResult<ParticipantOfEventDto>> GetParticipantById(int participantId)
         {
             var query = new GetParticipantByIdCommand(participantId);
@@ -55,7 +55,7 @@ namespace EventsService.API.Controllers
             return Ok(participant);
         }
 
-        [HttpGet("event/{eventId}")]
+        [HttpGet("get-event-participants/{eventId}")]
         public async Task<ActionResult<IEnumerable<ParticipantOfEventDto>>> GetParticipantsByEventId(int eventId)
         {
             var query = new GetEventParticipantsCommand(eventId);

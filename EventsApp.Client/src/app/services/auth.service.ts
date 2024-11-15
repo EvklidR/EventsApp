@@ -59,7 +59,7 @@ export class AuthService {
       throw new Error('No refresh token available');
     }
 
-    return this.http.post<AuthenticatedResponse>(`${this.apiUrl}api/Token/refresh`, { accessToken, refreshToken }).pipe(
+    return this.http.post<AuthenticatedResponse>(`${this.apiUrl}/Token/refresh`, { accessToken, refreshToken }).pipe(
       tap((response: AuthenticatedResponse) => {
         localStorage.setItem('accessToken', response.accessToken);
         localStorage.setItem('refreshToken', response.refreshToken);

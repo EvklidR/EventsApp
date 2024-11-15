@@ -6,18 +6,21 @@ using AutoMapper;
 using System.Linq;
 using System.Threading.Tasks;
 using EventsService.Domain.Entities;
+using EventsService.Application.Interfaces;
 
 namespace EventsService.Application.UseCases.ParticipantsUseCases
 {
     public class RegisterUserForEventCommandHandler : IRequestHandler<RegisterUserForEventCommand>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
-        public RegisterUserForEventCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public RegisterUserForEventCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IUserService userService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _userService = userService;
         }
 
         public async Task Handle(RegisterUserForEventCommand request, CancellationToken cancellationToken)
@@ -27,6 +30,18 @@ namespace EventsService.Application.UseCases.ParticipantsUseCases
             if (eventToRegister == null)
             {
                 throw new NotFoundException("Event not found");
+            }
+
+            if (request.ProfileDto.UserId == null)
+            {
+                throw new BadAuthorisationException("There is no user id");
+            }
+
+            var isUserExist = await _userService.CheckUserAsync((int)request.ProfileDto.UserId);
+
+            if (isUserExist == false) 
+            {
+                throw new BadAuthorisationException("User not found");
             }
 
             var participants = await _unitOfWork.Participants.GetAllAsync();
