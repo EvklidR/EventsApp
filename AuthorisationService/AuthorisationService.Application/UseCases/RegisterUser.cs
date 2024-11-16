@@ -44,6 +44,13 @@ namespace AuthorisationService.Application.UseCases
 
             var user = _mapper.Map<User>(createUserDto);
 
+            var refreshToken = _tokenService.GenerateRefreshToken();
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(10);
+
+            _userRepository.AddUser(user);
+            await _userRepository.CompleteAsync();
+
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
@@ -52,12 +59,6 @@ namespace AuthorisationService.Application.UseCases
             };
 
             var accessToken = _tokenService.GenerateAccessToken(claims);
-            var refreshToken = _tokenService.GenerateRefreshToken();
-            user.RefreshToken = refreshToken;
-            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(10);
-
-            _userRepository.AddUser(user);
-            await _userRepository.CompleteAsync();
 
             return new AuthenticatedResponse
             {
