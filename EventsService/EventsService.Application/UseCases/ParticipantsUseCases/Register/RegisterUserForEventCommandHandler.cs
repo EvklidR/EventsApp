@@ -34,14 +34,14 @@ namespace EventsService.Application.UseCases.ParticipantsUseCases
 
             if (request.ProfileDto.UserId == null)
             {
-                throw new BadAuthorisationException("There is no user id");
+                throw new UnauthorizedException("There is no user id");
             }
 
             var isUserExist = await _userService.CheckUserAsync((int)request.ProfileDto.UserId);
 
             if (isUserExist == false) 
             {
-                throw new BadAuthorisationException("User not found");
+                throw new UnauthorizedException("User not found");
             }
 
             var participants = await _unitOfWork.Participants.GetAllAsync();

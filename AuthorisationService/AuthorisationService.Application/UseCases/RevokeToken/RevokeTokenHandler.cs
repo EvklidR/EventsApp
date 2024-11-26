@@ -17,7 +17,7 @@ namespace AuthorisationService.Application.UseCases
         public async Task Handle(RevokeTokenCommand request, CancellationToken cancellationToken)
         {
             var user = await _userRepository.GetByIdAsync(request.Id);
-            if (user == null) throw new BadAuthorisationException("User not found");
+            if (user == null) throw new UnauthorizedException("User not found");
 
             user.RefreshToken = null;
             await _userRepository.CompleteAsync();

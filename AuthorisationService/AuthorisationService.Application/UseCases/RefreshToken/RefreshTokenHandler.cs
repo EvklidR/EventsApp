@@ -25,18 +25,18 @@ namespace AuthorisationService.Application.UseCases
 
             if (username == null)
             {
-                throw new BadAuthorisationException("AccessToken isn't valid");
+                throw new UnauthorizedException("AccessToken isn't valid");
             }
 
             var user = await _userRepository.GetByLoginAsync(username!);
             if (user == null)
             {
-                throw new BadAuthorisationException("User not found");
+                throw new UnauthorizedException("User not found");
             }
 
             if (user.RefreshToken != request.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
             {
-                throw new BadAuthorisationException("RefreshToken isn't valid");
+                throw new UnauthorizedException("RefreshToken isn't valid");
             }
 
             var newAccessToken = _tokenService.GenerateAccessToken(user);

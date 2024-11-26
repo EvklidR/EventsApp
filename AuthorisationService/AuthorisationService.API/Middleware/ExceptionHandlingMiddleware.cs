@@ -42,7 +42,7 @@ namespace AuthorisationService.Api.Middleware
                     result = new { message = new { errors = badRequestEx.Errors } };
                     break;
 
-                case BadAuthorisationException badAuthEx:
+                case UnauthorizedException badAuthEx:
                     statusCode = HttpStatusCode.Unauthorized;
                     result = new { message = badAuthEx.Message };
                     break;
