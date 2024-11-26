@@ -31,7 +31,7 @@ namespace EventsService.API.Controllers
         [HttpGet("get-event-by-name/{name}")]
         public async Task<IActionResult> GetEventByName(string name)
         {
-            var query = new GetEventByNameCommand(name);
+            var query = new GetEventByNameQuery(name);
             var eventDto = await _mediator.Send(query);
             return Ok(eventDto);
         }
@@ -47,7 +47,7 @@ namespace EventsService.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<EventDto>>> GetEvents([FromQuery] EventFilterDto filterDto)
         {
-            var query = new GetFilteredEventsCommand(filterDto);
+            var query = new GetFilteredEventsQuery(filterDto);
             var events = await _mediator.Send(query);
             return Ok(events);
         }
@@ -58,14 +58,13 @@ namespace EventsService.API.Controllers
         public async Task<ActionResult<IEnumerable<EventDto>>> GetUserEvents()
         {
             var userId = (int)HttpContext.Items["UserId"]!;
-            var query = new GetUserEventsCommand(userId);
+            var query = new GetUserEventsQuery(userId);
             var userEvents = await _mediator.Send(query);
             return Ok(userEvents);
         }
 
         [Authorize(Roles = "admin")]
         [HttpPost]
-        [ServiceFilter(typeof(ValidateCreateEventDtoAttribute))]
         public async Task<IActionResult> CreateEvent([FromForm] CreateEventDto createEventDto, IFormFile? imageFile)
         {
             var command = new CreateEventCommand(createEventDto, imageFile);
@@ -75,7 +74,6 @@ namespace EventsService.API.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpPut]
-        [ServiceFilter(typeof(ValidateUpdateEventDtoAttribute))]
         public async Task<IActionResult> UpdateEvent(UpdateEventDto updateEventDto)
         {
             var command = new UpdateEventCommand(updateEventDto);

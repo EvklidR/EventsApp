@@ -6,7 +6,7 @@ using EventsService.Application.Exceptions;
 
 namespace EventsService.Application.UseCases.EventsUseCases
 {
-    public class GetEventByIdHandler : IRequestHandler<GetEventByIdCommand, EventDto>
+    public class GetEventByIdHandler : IRequestHandler<GetEventByIdQuery, EventDto>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -17,7 +17,7 @@ namespace EventsService.Application.UseCases.EventsUseCases
             _mapper = mapper;
         }
 
-        public async Task<EventDto> Handle(GetEventByIdCommand request, CancellationToken cancellationToken)
+        public async Task<EventDto> Handle(GetEventByIdQuery request, CancellationToken cancellationToken)
         {
             var eventEntity = await _unitOfWork.Events.GetByIdAsync(request.Id);
 

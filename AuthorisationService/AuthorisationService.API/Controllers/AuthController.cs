@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using AuthorisationService.Application.Models;
-using AuthorisationService.Api.Filters;
-using AuthorisationService.Application.DTOs;
-using AuthorisationService.Application.Interfaces.UseCases;
+using MediatR;
+using AuthorisationService.Application.UseCases;
 
 namespace AuthorisationService.Api.Controllers
 {
@@ -10,37 +8,31 @@ namespace AuthorisationService.Api.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly ILoginUser _loginUser;
-        private readonly IRegisterUser _registerUser;
-        private readonly ICheckUserById _checkUserById;
+        private readonly IMediator _mediator;
 
-        public AuthController(ILoginUser loginUser, IRegisterUser registerUser, ICheckUserById checkUserById)
+        public AuthController(IMediator mediator)
         {
-            _loginUser = loginUser;
-            _registerUser = registerUser;
-            _checkUserById = checkUserById;
+            _mediator = mediator;
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginModel loginModel)
+        public async Task<IActionResult> Login(LoginUserCommand command)
         {
-            var response = await _loginUser.ExecuteAsync(loginModel);
+            var response = await _mediator.Send(command);
             return Ok(response);
         }
 
-
         [HttpPost("register")]
-        [ServiceFilter(typeof(ValidateCreateUserDtoAttribute))]
-        public async Task<IActionResult> Register([FromBody] CreateUserDto createUserDto)
+        public async Task<IActionResult> Register(RegisterUserCommand command)
         {
-            var response = await _registerUser.ExecuteAsync(createUserDto);
+            var response = await _mediator.Send(command);
             return Ok(response);
         }
 
         [HttpGet("check_user_by_id/{id}")]
         public async Task<IActionResult> Check(int id)
         {
-            var response = await _checkUserById.ExecuteAsync(id);
+            var response = await _mediator.Send(new CheckUserByIdQuery(id));
             return Ok(response);
         }
     }

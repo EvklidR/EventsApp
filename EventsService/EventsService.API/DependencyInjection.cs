@@ -52,9 +52,6 @@ namespace EventsService.API.DependencyInjection
                 });
             });
 
-            services.AddScoped<ValidateCreateEventDtoAttribute>();
-            services.AddScoped<ValidateCreateProfileDtoAttribute>();
-            services.AddScoped<ValidateUpdateEventDtoAttribute>();
             services.AddScoped<UserIdFilter>();
 
 

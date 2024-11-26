@@ -1,5 +1,5 @@
-﻿using FluentValidation;
-using AuthorisationService.Application.DTOs;
+﻿using AuthorisationService.Application.DTOs;
+using FluentValidation;
 
 namespace AuthorisationService.Application.Validators
 {

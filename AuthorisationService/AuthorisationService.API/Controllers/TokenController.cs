@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using AuthorisationService.Application.Models;
 using Microsoft.AspNetCore.Authorization;
-using AuthorisationService.Application.Interfaces.UseCases;
 using System.Security.Claims;
+using MediatR;
+using AuthorisationService.Application.UseCases;
 
 namespace AuthorisationService.Api.Controllers
 {
@@ -10,19 +10,17 @@ namespace AuthorisationService.Api.Controllers
     [ApiController]
     public class TokenController : ControllerBase
     {
-        private readonly IRefreshToken _refreshToken;
-        private readonly IRevokeToken _revokeToken;
+        private readonly IMediator _mediator;
 
-        public TokenController(IRefreshToken refreshToken, IRevokeToken revokeToken)
+        public TokenController(IMediator mediator)
         {
-            _refreshToken = refreshToken;
-            _revokeToken = revokeToken;
+            _mediator = mediator;
         }
 
         [HttpPost("refresh")]
-        public async Task<IActionResult> Refresh(TokenApiModel tokenApiModel)
+        public async Task<IActionResult> Refresh(RefreshTokenCommand command)
         {
-            var response = await _refreshToken.ExecuteAsync(tokenApiModel);
+            var response = await _mediator.Send(command);
             return Ok(response);
         }
 
@@ -33,7 +31,7 @@ namespace AuthorisationService.Api.Controllers
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             int userId = int.Parse(userIdClaim.Value);
 
-            await _revokeToken.ExecuteAsync(userId);
+            await _mediator.Send(new RevokeTokenCommand(userId));
             return NoContent();
         }
     }

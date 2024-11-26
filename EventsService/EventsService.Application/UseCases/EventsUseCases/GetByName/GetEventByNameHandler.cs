@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace EventsService.Application.UseCases.EventsUseCases
 {
-    public class GetEventByNameHandler : IRequestHandler<GetEventByNameCommand, EventDto>
+    public class GetEventByNameHandler : IRequestHandler<GetEventByNameQuery, EventDto>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -19,7 +19,7 @@ namespace EventsService.Application.UseCases.EventsUseCases
             _mapper = mapper;
         }
 
-        public async Task<EventDto> Handle(GetEventByNameCommand request, CancellationToken cancellationToken)
+        public async Task<EventDto> Handle(GetEventByNameQuery request, CancellationToken cancellationToken)
         {
             var eventEntity = await _unitOfWork.Events.GetByNameAsync(request.Name);
 

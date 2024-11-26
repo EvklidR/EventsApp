@@ -5,7 +5,7 @@ using AutoMapper;
 
 namespace EventsService.Application.UseCases.EventsUseCases
 {
-    public class GetFilteredEventsHandler : IRequestHandler<GetFilteredEventsCommand, IEnumerable<EventDto>>
+    public class GetFilteredEventsHandler : IRequestHandler<GetFilteredEventsQuery, IEnumerable<EventDto>?>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -16,33 +16,18 @@ namespace EventsService.Application.UseCases.EventsUseCases
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<EventDto>> Handle(GetFilteredEventsCommand request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<EventDto>?> Handle(GetFilteredEventsQuery request, CancellationToken cancellationToken)
         {
             var filterDto = request.Filter;
 
-            var events = await _unitOfWork.Events.GetAllAsync();
+            var events = await _unitOfWork.Events.GetPaginatedAsync(
+                filterDto.PageNumber,
+                filterDto.PageSize,
+                filterDto.Date,
+                filterDto.Location,
+                filterDto.Category);
 
-            if (filterDto.Date.HasValue)
-            {
-                events = events.Where(e => e.DateTimeHolding.Date == filterDto.Date.Value.Date);
-            }
-
-            if (!string.IsNullOrEmpty(filterDto.Location))
-            {
-                events = events.Where(e => e.Location.ToLower().Contains(filterDto.Location.ToLower()));
-            }
-
-            if (filterDto.Category.HasValue)
-            {
-                events = events.Where(e => e.Category == filterDto.Category.Value);
-            }
-
-            var paginatedEvents = events
-                .Skip((filterDto.PageNumber - 1) * filterDto.PageSize)
-                .Take(filterDto.PageSize)
-                .ToList();
-
-            return _mapper.Map<IEnumerable<EventDto>>(paginatedEvents);
+            return _mapper.Map<IEnumerable<EventDto>>(events);
         }
     }
 }

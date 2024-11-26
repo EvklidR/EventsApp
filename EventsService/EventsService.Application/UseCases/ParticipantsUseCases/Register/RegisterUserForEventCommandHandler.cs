@@ -51,7 +51,7 @@ namespace EventsService.Application.UseCases.ParticipantsUseCases
 
             if (isAlreadyRegistered != null)
             {
-                throw new BusinessLogicException("You are already registered");
+                throw new AlreadyExistsException("You are already registered");
             }
 
             if (eventToRegister.Participants.Count < eventToRegister.MaxParticipants)
@@ -62,7 +62,7 @@ namespace EventsService.Application.UseCases.ParticipantsUseCases
             }
             else
             {
-                throw new BusinessLogicException("There are no places to register for this event");
+                throw new AlreadyExistsException("There are no places to register for this event");
             }
         }
     }

@@ -1,7 +1,20 @@
-﻿namespace AuthorisationService.Application.Exceptions
+﻿using System;
+using System.Collections.Generic;
+
+namespace AuthorisationService.Application.Exceptions
 {
     public class BadRequestException : Exception
     {
-        public BadRequestException(string message) : base(message) { }
+        public IEnumerable<string> Errors { get; }
+
+        public BadRequestException(string message)
+        {
+            Errors = new List<string> { message };
+        }
+
+        public BadRequestException(IEnumerable<string> errors)
+        {
+            Errors = errors;
+        }
     }
 }

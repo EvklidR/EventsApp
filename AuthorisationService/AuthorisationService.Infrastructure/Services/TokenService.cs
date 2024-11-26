@@ -6,6 +6,7 @@ using AuthorisationService.Application.Interfaces;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using AuthorisationService.Application.Exceptions;
+using AuthorisationService.Domain.Entities;
 
 namespace AuthorisationService.Infrastructure.Services
 {
@@ -18,8 +19,15 @@ namespace AuthorisationService.Infrastructure.Services
             _configuration = configuration;
         }
 
-        public string GenerateAccessToken(IEnumerable<Claim> claims)
+        public string GenerateAccessToken(User user)
         {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Login),
+                new Claim(ClaimTypes.Role, user.Role.ToString())
+            };
+
             var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AuthOptions:Key"]));
             var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
 

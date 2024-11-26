@@ -1,8 +1,4 @@
-﻿
-
-using EventsService.Domain.Entities;
-
-namespace EventsService.Domain.Interfaces
+﻿namespace EventsService.Domain.Interfaces
 {
     public interface IBaseRepository<T>
     {

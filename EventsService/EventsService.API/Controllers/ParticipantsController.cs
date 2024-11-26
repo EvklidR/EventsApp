@@ -21,7 +21,6 @@ namespace EventsService.API.Controllers
         [Authorize]
         [HttpPost("register")]
         [ServiceFilter(typeof(UserIdFilter))]
-        [ServiceFilter(typeof(ValidateCreateProfileDtoAttribute))]
         public async Task<IActionResult> RegisterUser(CreateProfileDto profile)
         {
             var userId = (int)HttpContext.Items["UserId"]!;
@@ -49,7 +48,7 @@ namespace EventsService.API.Controllers
         [HttpGet("get-participant-by-id/{participantId}")]
         public async Task<ActionResult<ParticipantOfEventDto>> GetParticipantById(int participantId)
         {
-            var query = new GetParticipantByIdCommand(participantId);
+            var query = new GetParticipantByIdQuery(participantId);
             var participant = await _mediator.Send(query);
 
             return Ok(participant);
@@ -58,7 +57,7 @@ namespace EventsService.API.Controllers
         [HttpGet("get-event-participants/{eventId}")]
         public async Task<ActionResult<IEnumerable<ParticipantOfEventDto>>> GetParticipantsByEventId(int eventId)
         {
-            var query = new GetEventParticipantsCommand(eventId);
+            var query = new GetEventParticipantsQuery(eventId);
             var participants = await _mediator.Send(query);
 
             return Ok(participants);

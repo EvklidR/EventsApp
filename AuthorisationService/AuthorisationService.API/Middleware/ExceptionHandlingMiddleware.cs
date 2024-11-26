@@ -1,5 +1,4 @@
 ﻿using AuthorisationService.Application.Exceptions;
-using Azure;
 using Newtonsoft.Json;
 using System.Net;
 
@@ -29,25 +28,28 @@ namespace AuthorisationService.Api.Middleware
         private static Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             HttpStatusCode statusCode;
-            string result;
+            object result;
 
             switch (exception)
             {
                 case AlreadyExistsException alreadyExistsEx:
                     statusCode = HttpStatusCode.Conflict;
-                    result = alreadyExistsEx.Message;
+                    result = new { message = alreadyExistsEx.Message };
                     break;
+
                 case BadRequestException badRequestEx:
                     statusCode = HttpStatusCode.BadRequest;
-                    result = badRequestEx.Message;
+                    result = new { message = new { errors = badRequestEx.Errors } };
                     break;
-                case BadAuthorisationException notFoundEx:
+
+                case BadAuthorisationException badAuthEx:
                     statusCode = HttpStatusCode.Unauthorized;
-                    result = notFoundEx.Message;
+                    result = new { message = badAuthEx.Message };
                     break;
+
                 default:
                     statusCode = HttpStatusCode.InternalServerError;
-                    result = "An unexpected error occurred.";
+                    result = new { message = exception.Message };
                     break;
             }
 

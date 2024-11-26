@@ -28,25 +28,32 @@ namespace EventsService.API.Middleware
         private static Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             HttpStatusCode statusCode;
-            string result;
+            object result;
 
             switch (exception)
             {
-                case NotFoundException notFoundEx:
-                    statusCode = HttpStatusCode.NotFound;
-                    result = notFoundEx.Message;
-                    break;
-                case BusinessLogicException businessLogicEx:
+                case AlreadyExistsException alreadyExistsEx:
                     statusCode = HttpStatusCode.Conflict;
-                    result = businessLogicEx.Message;
+                    result = new { message = alreadyExistsEx.Message };
                     break;
+
+                case BadRequestException badRequestEx:
+                    statusCode = HttpStatusCode.BadRequest;
+                    result = new { message = new { errors = badRequestEx.Errors } };
+                    break;
+
                 case BadAuthorisationException badAuthEx:
                     statusCode = HttpStatusCode.Unauthorized;
-                    result = badAuthEx.Message;
+                    result = new { message = badAuthEx.Message };
+                    break;
+                
+                case NotFoundException NotFoundEx:
+                    statusCode = HttpStatusCode.NotFound;
+                    result = new { message = NotFoundEx.Message }; 
                     break;
                 default:
                     statusCode = HttpStatusCode.InternalServerError;
-                    result = "An unexpected error occurred.";
+                    result = new { message = exception.Message };
                     break;
             }
 

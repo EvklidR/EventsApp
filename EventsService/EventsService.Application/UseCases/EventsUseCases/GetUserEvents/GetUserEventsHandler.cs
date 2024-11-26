@@ -2,13 +2,10 @@
 using EventsService.Application.DTOs;
 using EventsService.Domain.Interfaces;
 using AutoMapper;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Threading;
 
 namespace EventsService.Application.UseCases.EventsUseCases
 {
-    public class GetUserEventsHandler : IRequestHandler<GetUserEventsCommand, IEnumerable<EventDto>>
+    public class GetUserEventsHandler : IRequestHandler<GetUserEventsQuery, IEnumerable<EventDto>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -19,7 +16,7 @@ namespace EventsService.Application.UseCases.EventsUseCases
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<EventDto>> Handle(GetUserEventsCommand request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<EventDto>> Handle(GetUserEventsQuery request, CancellationToken cancellationToken)
         {
             var events = await _unitOfWork.Events.GetAllAsync();
 

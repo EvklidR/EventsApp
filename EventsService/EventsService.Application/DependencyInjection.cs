@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using EventsService.Application.Validators;
 using System.Reflection;
 using FluentValidation;
+using MediatR;
+using EventsService.Application.Behaviors;
 
 namespace EventsService.Application.DependencyInjection
 {
@@ -9,12 +10,13 @@ namespace EventsService.Application.DependencyInjection
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            services.AddValidatorsFromAssemblyContaining<CreateEventDtoValidator>();
-            services.AddValidatorsFromAssemblyContaining<CreateProfileDtoValidator>();
-            services.AddValidatorsFromAssemblyContaining<UpdateEventDtoValidator>();
+
+            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
             return services;
 

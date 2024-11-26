@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using FluentValidation;
-using AuthorisationService.Application.UseCases;
-using AuthorisationService.Application.Interfaces.UseCases;
+using MediatR;
+using AuthorisationService.Application.Behaviors;
 
 namespace AuthorisationService.Application.DependencyInjection
 {
@@ -12,12 +12,9 @@ namespace AuthorisationService.Application.DependencyInjection
         {
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
-            services.AddScoped<ILoginUser, LoginUser>();
-            services.AddScoped<IRegisterUser, RegisterUser>();
-            services.AddScoped<ICheckUserById, CheckUserById>();
-            services.AddScoped<IRefreshToken, RefreshToken>();
-            services.AddScoped<IRevokeToken, RevokeToken>();
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
             return services;
         }
