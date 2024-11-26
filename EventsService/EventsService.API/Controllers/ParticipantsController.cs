@@ -46,18 +46,16 @@ namespace EventsService.API.Controllers
         }
 
         [HttpGet("get-participant-by-id/{participantId}")]
-        public async Task<ActionResult<ParticipantOfEventDto>> GetParticipantById(int participantId)
+        public async Task<ActionResult<ParticipantOfEventDto>> GetParticipantById(GetParticipantByIdQuery query)
         {
-            var query = new GetParticipantByIdQuery(participantId);
             var participant = await _mediator.Send(query);
 
             return Ok(participant);
         }
 
         [HttpGet("get-event-participants/{eventId}")]
-        public async Task<ActionResult<IEnumerable<ParticipantOfEventDto>>> GetParticipantsByEventId(int eventId)
+        public async Task<ActionResult<IEnumerable<ParticipantOfEventDto>>> GetParticipantsByEventId(GetEventParticipantsQuery query)
         {
-            var query = new GetEventParticipantsQuery(eventId);
             var participants = await _mediator.Send(query);
 
             return Ok(participants);

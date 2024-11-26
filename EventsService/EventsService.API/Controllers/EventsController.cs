@@ -29,25 +29,22 @@ namespace EventsService.API.Controllers
         }
 
         [HttpGet("get-event-by-name/{name}")]
-        public async Task<IActionResult> GetEventByName(string name)
+        public async Task<IActionResult> GetEventByName(GetEventByNameQuery query)
         {
-            var query = new GetEventByNameQuery(name);
             var eventDto = await _mediator.Send(query);
             return Ok(eventDto);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<EventDto>> GetEventById(int id)
+        public async Task<ActionResult<EventDto>> GetEventById(GetEventByIdQuery query)
         {
-            var query = new GetEventByIdCommand(id);
             var eventDto = await _mediator.Send(query);
             return Ok(eventDto);
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EventDto>>> GetEvents([FromQuery] EventFilterDto filterDto)
+        public async Task<ActionResult<IEnumerable<EventDto>>> GetEvents(GetFilteredEventsQuery query)
         {
-            var query = new GetFilteredEventsQuery(filterDto);
             var events = await _mediator.Send(query);
             return Ok(events);
         }
@@ -65,27 +62,24 @@ namespace EventsService.API.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpPost]
-        public async Task<IActionResult> CreateEvent([FromForm] CreateEventDto createEventDto, IFormFile? imageFile)
+        public async Task<IActionResult> CreateEvent(CreateEventCommand command)
         {
-            var command = new CreateEventCommand(createEventDto, imageFile);
             var createdEvent = await _mediator.Send(command);
             return CreatedAtAction(nameof(GetEventById), new { id = createdEvent.Id }, createdEvent);
         }
 
         [Authorize(Roles = "admin")]
         [HttpPut]
-        public async Task<IActionResult> UpdateEvent(UpdateEventDto updateEventDto)
+        public async Task<IActionResult> UpdateEvent(UpdateEventCommand command)
         {
-            var command = new UpdateEventCommand(updateEventDto);
             await _mediator.Send(command);
             return NoContent();
         }
 
         [Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteEvent(int id)
+        public async Task<IActionResult> DeleteEvent(DeleteEventCommand command)
         {
-            var command = new DeleteEventCommand(id);
             await _mediator.Send(command);
             return NoContent();
         }
