@@ -26,12 +26,12 @@ namespace EventsService.Infrastructure.Services
 
             if (string.IsNullOrEmpty(fromAddress))
             {
-                throw new BadRequestException("From address must be provided.");
+                throw new BadRequest("From address must be provided.");
             }
 
             if (string.IsNullOrEmpty(portString) || !int.TryParse(portString, out int port))
             {
-                throw new BadRequestException("Valid port number must be provided.");
+                throw new BadRequest("Valid port number must be provided.");
             }
 
             using (var client = new SmtpClient(smtpServer, port))

@@ -68,7 +68,7 @@ namespace EventsService.UseCasesTests
             var handler = new CreateEventHandler(_mockUnitOfWork.Object, _mockMapper.Object, _mockImageService.Object);
 
             // Act & Assert
-            await Assert.ThrowsAsync<AlreadyExistsException>(() =>
+            await Assert.ThrowsAsync<AlreadyExists>(() =>
                 handler.Handle(new CreateEventCommand(createEventDto, null), CancellationToken.None));
 
             _mockUnitOfWork.Verify(u => u.Events.Add(It.IsAny<Event>()), Times.Never);
@@ -107,7 +107,7 @@ namespace EventsService.UseCasesTests
             var handler = new DeleteEventHandler(_mockUnitOfWork.Object, _mockImageService.Object);
 
             // Act & Assert
-            await Assert.ThrowsAsync<NotFoundException>(() =>
+            await Assert.ThrowsAsync<NotFound>(() =>
                 handler.Handle(new DeleteEventCommand(eventId), CancellationToken.None));
 
             _mockUnitOfWork.Verify(u => u.Events.Delete(It.IsAny<Event>()), Times.Never);
@@ -148,7 +148,7 @@ namespace EventsService.UseCasesTests
             var handler = new GetEventByIdHandler(_mockUnitOfWork.Object, _mockMapper.Object);
 
             // Act & Assert
-            await Assert.ThrowsAsync<NotFoundException>(() =>
+            await Assert.ThrowsAsync<NotFound>(() =>
                 handler.Handle(new GetEventByIdQuery(eventId), CancellationToken.None));
         }
     }

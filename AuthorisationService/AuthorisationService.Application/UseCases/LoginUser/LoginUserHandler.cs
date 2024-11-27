@@ -24,12 +24,12 @@ namespace AuthorisationService.Application.UseCases
 
             if (user == null)
             {
-                throw new UnauthorizedException("User with such login not found");
+                throw new Unauthorized("User with such login not found");
             }
 
             if (!BCrypt.Net.BCrypt.Verify(request.Password, user.HashedPassword))
             {
-                throw new UnauthorizedException("Password and login don't match");
+                throw new Unauthorized("Password and login don't match");
             }
 
             var accessToken = _tokenService.GenerateAccessToken(user);

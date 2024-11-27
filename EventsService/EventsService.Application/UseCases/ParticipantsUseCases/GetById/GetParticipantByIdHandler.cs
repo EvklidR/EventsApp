@@ -24,7 +24,7 @@ namespace EventsService.Application.UseCases.ParticipantsUseCases
 
             if (participant == null)
             {
-                throw new NotFoundException("Participant not found");
+                throw new NotFound("Participant not found");
             }
 
             return _mapper.Map<ParticipantOfEventDto>(participant);

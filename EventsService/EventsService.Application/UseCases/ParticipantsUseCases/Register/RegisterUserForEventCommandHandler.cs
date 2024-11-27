@@ -29,19 +29,19 @@ namespace EventsService.Application.UseCases.ParticipantsUseCases
 
             if (eventToRegister == null)
             {
-                throw new NotFoundException("Event not found");
+                throw new NotFound("Event not found");
             }
 
             if (request.ProfileDto.UserId == null)
             {
-                throw new UnauthorizedException("There is no user id");
+                throw new Unauthorized("There is no user id");
             }
 
             var isUserExist = await _userService.CheckUserAsync((int)request.ProfileDto.UserId);
 
             if (isUserExist == false) 
             {
-                throw new UnauthorizedException("User not found");
+                throw new Unauthorized("User not found");
             }
 
             var participants = await _unitOfWork.Participants.GetAllAsync();
@@ -51,7 +51,7 @@ namespace EventsService.Application.UseCases.ParticipantsUseCases
 
             if (isAlreadyRegistered != null)
             {
-                throw new AlreadyExistsException("You are already registered");
+                throw new AlreadyExists("You are already registered");
             }
 
             if (eventToRegister.Participants.Count < eventToRegister.MaxParticipants)
@@ -62,7 +62,7 @@ namespace EventsService.Application.UseCases.ParticipantsUseCases
             }
             else
             {
-                throw new AlreadyExistsException("There are no places to register for this event");
+                throw new AlreadyExists("There are no places to register for this event");
             }
         }
     }

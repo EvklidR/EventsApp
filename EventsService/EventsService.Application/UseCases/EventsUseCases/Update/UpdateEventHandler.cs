@@ -25,7 +25,7 @@ namespace EventsService.Application.UseCases.EventsUseCases
 
             if (existingEvent == null)
             {
-                throw new NotFoundException("Event not found");
+                throw new NotFound("Event not found");
             }
 
             if (existingEvent.Name != request.UpdateEventDto.Name)
@@ -34,7 +34,7 @@ namespace EventsService.Application.UseCases.EventsUseCases
 
                 if (eventWithThisName != null)
                 {
-                    throw new AlreadyExistsException("Event with this name already exists");
+                    throw new AlreadyExists("Event with this name already exists");
                 }
             }
 

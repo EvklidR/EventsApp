@@ -32,22 +32,22 @@ namespace EventsService.API.Middleware
 
             switch (exception)
             {
-                case AlreadyExistsException alreadyExistsEx:
+                case AlreadyExists alreadyExistsEx:
                     statusCode = HttpStatusCode.Conflict;
                     result = new { message = alreadyExistsEx.Message };
                     break;
 
-                case BadRequestException badRequestEx:
+                case BadRequest badRequestEx:
                     statusCode = HttpStatusCode.BadRequest;
                     result = new { message = new { errors = badRequestEx.Errors } };
                     break;
 
-                case UnauthorizedException badAuthEx:
+                case Unauthorized badAuthEx:
                     statusCode = HttpStatusCode.Unauthorized;
                     result = new { message = badAuthEx.Message };
                     break;
                 
-                case NotFoundException NotFoundEx:
+                case NotFound NotFoundEx:
                     statusCode = HttpStatusCode.NotFound;
                     result = new { message = NotFoundEx.Message }; 
                     break;

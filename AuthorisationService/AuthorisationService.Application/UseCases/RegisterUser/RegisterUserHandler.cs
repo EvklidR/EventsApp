@@ -34,13 +34,13 @@ namespace AuthorisationService.Application.UseCases
             var existingUser = await _userRepository.GetByEmailAsync(createUserDto.Email);
             if (existingUser != null)
             {
-                throw new AlreadyExistsException("A user with the same email already exists.");
+                throw new AlreadyExists("A user with the same email already exists.");
             }
 
             existingUser = await _userRepository.GetByLoginAsync(createUserDto.Login);
             if (existingUser != null)
             {
-                throw new AlreadyExistsException("A user with the same login already exists.");
+                throw new AlreadyExists("A user with the same login already exists.");
             }
 
             var user = _mapper.Map<User>(createUserDto);

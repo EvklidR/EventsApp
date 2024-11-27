@@ -1,15 +1,15 @@
 ﻿namespace EventsService.Application.Exceptions
 {
-    public class BadRequestException : Exception
+    public class BadRequest : Exception
     {
         public IEnumerable<string> Errors { get; }
 
-        public BadRequestException(string message) 
+        public BadRequest(string message) 
         {
             Errors = new List<string>() { message };
         }
 
-        public BadRequestException(IEnumerable<string> errors)
+        public BadRequest(IEnumerable<string> errors)
         {
             Errors = errors;
         }

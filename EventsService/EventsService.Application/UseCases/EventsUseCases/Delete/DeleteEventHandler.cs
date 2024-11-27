@@ -22,7 +22,7 @@ namespace EventsService.Application.UseCases.EventsUseCases
 
             if (eventEntity == null)
             {
-                throw new NotFoundException("Event not found");
+                throw new NotFound("Event not found");
             }
 
             if (!string.IsNullOrEmpty(eventEntity.ImageUrl))

@@ -26,7 +26,7 @@ namespace EventsService.Application.UseCases.EventsUseCases
             var existingEvent = await _unitOfWork.Events.GetByNameAsync(request.EventDto.Name);
             if (existingEvent != null)
             {
-                throw new AlreadyExistsException("Event with this name already exists");
+                throw new AlreadyExists("Event with this name already exists");
             }
 
             string? imageUrl = null;

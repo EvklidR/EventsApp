@@ -81,7 +81,7 @@ namespace AuthorisationService.Infrastructure.Services
             }
             catch (Exception)
             {
-                throw new BadRequestException("Access token isn't valid");
+                throw new BadRequest("Access token isn't valid");
             }
             return principal;
         }

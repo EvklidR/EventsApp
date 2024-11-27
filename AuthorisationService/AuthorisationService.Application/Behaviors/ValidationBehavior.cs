@@ -26,7 +26,7 @@ namespace AuthorisationService.Application.Behaviors
 
             if (failures.Count != 0)
             {
-                throw new BadRequestException(failures.Select(f => f.ErrorMessage).ToArray());
+                throw new BadRequest(failures.Select(f => f.ErrorMessage).ToArray());
             }
 
             return await next();

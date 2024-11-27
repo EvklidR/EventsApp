@@ -23,7 +23,7 @@ namespace EventsService.Application.Behaviors
 
                 if (!validationResult.IsValid)
                 {
-                    throw new BadRequestException(validationResult.Errors.Select(e => e.ErrorMessage));
+                    throw new BadRequest(validationResult.Errors.Select(e => e.ErrorMessage));
                 }
             }
 

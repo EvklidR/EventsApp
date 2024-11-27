@@ -56,7 +56,7 @@ namespace EventsService.Infrastructure.Services
 
             if (!File.Exists(filePath))
             {
-                throw new NotFoundException($"File {fileName} not found");
+                throw new NotFound($"File {fileName} not found");
             }
 
             byte[] fileBytes = await File.ReadAllBytesAsync(filePath);

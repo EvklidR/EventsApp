@@ -23,7 +23,7 @@ namespace EventsService.Application.UseCases.ParticipantsUseCases
 
             if (participant == null)
             {
-                throw new NotFoundException("Your registration not found");
+                throw new NotFound("Your registration not found");
             }
 
             _unitOfWork.Participants.Delete(participant);
