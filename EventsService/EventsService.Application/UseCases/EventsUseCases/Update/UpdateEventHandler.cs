@@ -28,6 +28,16 @@ namespace EventsService.Application.UseCases.EventsUseCases
                 throw new NotFoundException("Event not found");
             }
 
+            if (existingEvent.Name != request.UpdateEventDto.Name)
+            {
+                var eventWithThisName = await _unitOfWork.Events.GetByNameAsync(request.UpdateEventDto.Name);
+
+                if (eventWithThisName != null)
+                {
+                    throw new AlreadyExistsException("Event with this name already exists");
+                }
+            }
+
             bool shouldNotifyParticipants = existingEvent.Location != request.UpdateEventDto.Location ||
                                             existingEvent.DateTimeHolding != request.UpdateEventDto.DateTimeHolding;
 
