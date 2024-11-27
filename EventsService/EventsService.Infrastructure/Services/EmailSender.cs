@@ -2,6 +2,7 @@
 using System.Net;
 using EventsService.Application.Interfaces;
 using Microsoft.Extensions.Configuration;
+using EventsService.Application.Exceptions;
 
 
 namespace EventsService.Infrastructure.Services
@@ -25,12 +26,12 @@ namespace EventsService.Infrastructure.Services
 
             if (string.IsNullOrEmpty(fromAddress))
             {
-                throw new ArgumentNullException(nameof(fromAddress), "From address must be provided.");
+                throw new BadRequestException("From address must be provided.");
             }
 
             if (string.IsNullOrEmpty(portString) || !int.TryParse(portString, out int port))
             {
-                throw new ArgumentException("Valid port number must be provided.", nameof(portString));
+                throw new BadRequestException("Valid port number must be provided.");
             }
 
             using (var client = new SmtpClient(smtpServer, port))

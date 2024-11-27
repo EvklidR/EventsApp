@@ -1,5 +1,4 @@
-﻿using EventsService.Application.DTOs;
-using EventsService.Application.Validators;
+﻿using EventsService.Application.Validators;
 using FluentValidation;
 
 namespace EventsService.Application.UseCases.EventsUseCases.Validators

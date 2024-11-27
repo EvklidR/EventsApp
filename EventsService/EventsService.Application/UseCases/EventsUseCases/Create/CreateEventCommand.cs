@@ -12,6 +12,7 @@ namespace EventsService.Application.UseCases.EventsUseCases
             ImageFile = imageFile;
         }
 
+
         public CreateEventDto EventDto { get; set; }
         public IFormFile? ImageFile { get; set; }
     }
